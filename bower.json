@@ -1,0 +1,22 @@
+{
+  "name": "ng-validator",
+  "description": "easy to test angular validator",
+  "main": "index.js",
+  "authors": [
+    "kinogam"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "validator"
+  ],
+  "homepage": "https://github.com/kinogam/ngValidator",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

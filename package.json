@@ -1,0 +1,23 @@
+{
+  "name": "ng-validator",
+  "version": "0.0.1",
+  "description": "easy to test angular validator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kinogam/ngValidator.git"
+  },
+  "keywords": [
+    "angular",
+    "validator"
+  ],
+  "author": "kinogam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kinogam/ngValidator/issues"
+  },
+  "homepage": "https://github.com/kinogam/ngValidator#readme"
+}
