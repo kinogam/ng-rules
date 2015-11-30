@@ -1,4 +1,3 @@
-/*
 'use strict';
 
 var path = require('path');
@@ -6,10 +5,6 @@ var conf = require('./gulp/conf');
 
 var _ = require('lodash');
 var wiredep = require('wiredep');
-
-var pathSrcHtml = [
-  path.join(conf.paths.src, '/!**!/!*.html')
-];
 
 function listFiles() {
   var wiredepOptions = _.extend({}, conf.wiredep, {
@@ -19,9 +14,8 @@ function listFiles() {
 
   return wiredep(wiredepOptions).js
     .concat([
-      path.join(conf.paths.tmp, '/serve/public/index.module.js'),
-    ])
-    .concat(pathSrcHtml);
+      path.join(conf.paths.tmp, '/ng-rules.js'),
+    ]);
 }
 
 module.exports = function(config) {
@@ -33,11 +27,6 @@ module.exports = function(config) {
 
     autoWatch: false,
 
-    ngHtml2JsPreprocessor: {
-      stripPrefix: conf.paths.src + '/',
-      moduleName: 'userInfoManage'
-    },
-
     logLevel: 'WARN',
 
     frameworks: ['jasmine'],
@@ -47,8 +36,7 @@ module.exports = function(config) {
     plugins : [
       'karma-phantomjs-launcher',
       'karma-coverage',
-      'karma-jasmine',
-      'karma-ng-html2js-preprocessor'
+      'karma-jasmine'
     ],
 
     coverageReporter: {
@@ -64,9 +52,6 @@ module.exports = function(config) {
   // It was not possible to do it there because karma doesn't let us now if we are
   // running a single test or not
   configuration.preprocessors = {};
-  pathSrcHtml.forEach(function(path) {
-    configuration.preprocessors[path] = ['ng-html2js'];
-  });
 
   // This block is needed to execute Chrome on Travis
   // If you ever plan to use Chrome and Travis, you can keep it
@@ -84,4 +69,3 @@ module.exports = function(config) {
 
   config.set(configuration);
 };
-*/

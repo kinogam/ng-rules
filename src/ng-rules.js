@@ -1,3 +1,4 @@
-var x = () => {
-    console.log('hello world');
-};
+angular.module('ng-rules', [])
+.factory('$rules', () => {
+
+});
