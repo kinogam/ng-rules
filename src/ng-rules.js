@@ -1,1 +1,3 @@
-console.log('hello worlld');
+var x = () => {
+    console.log('hello world');
+};

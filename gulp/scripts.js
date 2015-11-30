@@ -34,6 +34,7 @@ function webpackWrapper(watch, test, callback) {
       version: false
     }));
 
+
     if(watch) {
       watch = false;
       callback();
