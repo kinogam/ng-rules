@@ -4,7 +4,7 @@
   "description": "easy to test angular validator",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,33 @@
   "bugs": {
     "url": "https://github.com/kinogam/ng-rules/issues"
   },
-  "homepage": "https://github.com/kinogam/ng-rules#readme"
+  "homepage": "https://github.com/kinogam/ng-rules#readme",
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-loader": "^6.2.0",
+    "chalk": "~1.1.1",
+    "del": "~2.0.2",
+    "gulp": "~3.9.0",
+    "gulp-load-plugins": "~0.10.0",
+    "gulp-size": "~2.0.0",
+    "gulp-sourcemaps": "~1.6.0",
+    "gulp-uglify": "~1.4.1",
+    "gulp-util": "~3.0.6",
+    "karma": "~0.13.10",
+    "karma-coverage": "~0.5.2",
+    "karma-jasmine": "~0.3.6",
+    "karma-phantomjs-launcher": "~0.2.1",
+    "lodash": "~3.10.1",
+    "main-bower-files": "~2.9.0",
+    "ng-annotate-loader": "0.0.10",
+    "phantomjs": "~1.9.18",
+    "uglify-save-license": "~0.4.1",
+    "webpack": "^1.12.9",
+    "webpack-stream": "~2.1.1",
+    "wiredep": "~2.2.2",
+    "wrench": "~1.5.8"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
 }
