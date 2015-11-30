@@ -1,7 +1,8 @@
 {
   "name": "ng-rules",
+  "version": "0.0.1",
   "description": "easy to test angular validator",
-  "main": "index.js",
+  "main": "dist/ng-rules.js",
   "authors": [
     "kinogam"
   ],
