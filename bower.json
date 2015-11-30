@@ -1,5 +1,5 @@
 {
-  "name": "ng-validator",
+  "name": "ng-rules",
   "description": "easy to test angular validator",
   "main": "index.js",
   "authors": [
@@ -10,7 +10,7 @@
     "angular",
     "validator"
   ],
-  "homepage": "https://github.com/kinogam/ngValidator",
+  "homepage": "https://github.com/kinogam/ng-rules",
   "moduleType": [],
   "ignore": [
     "**/.*",

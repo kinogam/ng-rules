@@ -1,5 +1,5 @@
 {
-  "name": "ng-validator",
+  "name": "ng-rules",
   "version": "0.0.1",
   "description": "easy to test angular validator",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kinogam/ngValidator.git"
+    "url": "git+https://github.com/kinogam/ng-rules.git"
   },
   "keywords": [
     "angular",
@@ -17,7 +17,7 @@
   "author": "kinogam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kinogam/ngValidator/issues"
+    "url": "https://github.com/kinogam/ng-rules/issues"
   },
-  "homepage": "https://github.com/kinogam/ngValidator#readme"
+  "homepage": "https://github.com/kinogam/ng-rules#readme"
 }
