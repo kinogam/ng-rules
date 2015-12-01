@@ -18,8 +18,7 @@ addons:
     packages:
       - g++-4.8
 
-before_script:
+install:
   - npm install
-  - npm install -g bower
-  - bower install
+
 script: gulp
