@@ -11,9 +11,9 @@ var $ = require('gulp-load-plugins')({
 gulp.task('build', ['scripts'], function () {
 
   return gulp.src(path.join(conf.paths.tmp, '/ng-rules.js'))
-   // .pipe($.sourcemaps.init())
+    .pipe($.sourcemaps.init())
     .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', conf.errorHandler('Uglify'))
-    //.pipe($.sourcemaps.write('maps'))
+    .pipe($.sourcemaps.write('maps'))
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')))
     .pipe($.size({ title: path.join(conf.paths.dist, '/'), showFiles: true }));
   });
