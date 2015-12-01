@@ -19,6 +19,9 @@ addons:
       - g++-4.8
 
 install:
+  - du -sh ./node_modules ./bower_components/ || true
   - npm install
+  - npm install -g bower
+  - bower install
 
 script: gulp
