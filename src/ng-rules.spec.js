@@ -78,7 +78,7 @@ describe('ng-rules', () => {
                 expectValidatePass(data);
             });
 
-/*            it('should faill with property is not Number', () => {
+            it('should faill with property is not Number', () => {
                 var data = {
                     origin: {
                         num: 'abc'
@@ -89,7 +89,7 @@ describe('ng-rules', () => {
                 };
 
                 expectValidateFaill(data);
-            });*/
+            });
 
         });
 
