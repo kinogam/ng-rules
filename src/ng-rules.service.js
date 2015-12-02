@@ -1,13 +1,25 @@
-function RulesService($q){
+function RulesService($q, $rootScope){
     return (origin, rules) => {
-        return {
-            validate: () => {
-                var d = $q.defer();
-                d.resolve();
-                return d.promise;
-            }
+        let $scope = $rootScope.$new(),
+            result = {
+                isPass: false
+            };
+
+        angular.extend($scope, origin);
+
+        for(let p in origin){
+            $scope.$watch(p, function(value){
+                result.isPass = !checkEmpty(value);
+            });
         }
+
+        return result;
     };
+}
+
+
+function checkEmpty(value){
+    return value === undefined || /^\s*$/.test(value);
 }
 
 export default RulesService;
