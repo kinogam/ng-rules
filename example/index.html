@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../.tmp/ng-rules.js"></script>
+    <script>
+        angular.module('kino', ['ng-rules'])
+                .controller('MyController', function($scope, $rules){
+                    $scope.origin = {
+                        num: 123
+                    };
+
+                    var rules = {
+                      "num": "number"
+                    };
+
+                    var r = $rules($scope, 'orign', rules);
+
+                    $scope.r = r;
+                });
+
+
+    </script>
+</head>
+<body ng-controller="MyController" ng-app="kino">
+<input type="text" ng-model="origin.num" />
+<br/>
+{{r.isPass}}
+</body>
+</html>

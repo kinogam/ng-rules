@@ -1,24 +1,24 @@
 describe('ng-rules', () => {
     let $rules,
-        $rootScope;
+        $scope;
 
     beforeEach(angular.mock.module('ng-rules'));
 
-    beforeEach(inject((_$rules_, _$rootScope_) => {
+    beforeEach(inject((_$rules_, $rootScope) => {
         $rules = _$rules_;
-        $rootScope = _$rootScope_;
+        $scope = $rootScope.$new();
     }));
 
-    function expectValidatePass(data, value){
-        var r = $rules(data.origin, data.rules);
+    function expectValidatePass(rules, value){
+        var r = $rules($scope, 'origin', rules);
 
-        $rootScope.$digest();
+        $scope.$digest();
 
         expect(r.isPass).toBe(value !== undefined? value: true);
     }
 
-    function expectValidateFaill(data){
-        return expectValidatePass(data, false);
+    function expectValidateFaill(rules){
+        return expectValidatePass(rules, false);
     }
 
     describe('single validate', () => {
@@ -26,69 +26,63 @@ describe('ng-rules', () => {
         describe('base', () => {
 
             it('should pass with property is not empty', () => {
-                var data = {
-                    origin: {
-                        p1: 'hello'
-                    },
-                    rules: {
-                        p1: 'required'
-                    }
+
+                $scope.origin = {
+                    p1: 'hello'
                 };
 
-                expectValidatePass(data);
+                var rules = {
+                        p1: 'required'
+                    };
+
+                expectValidatePass(rules);
             });
 
             it('should fail with property is empty string', () => {
-                var data = {
-                    origin: {
+                $scope.origin = {
                         p1: ''
-                    },
-                    rules: {
+                    };
+                var rules = {
                         p1: 'required'
-                    }
-                };
+                    };
 
-                expectValidateFaill(data);
+                expectValidateFaill(rules);
             });
 
             it('should fail with property is spaces', () => {
-                var data = {
-                    origin: {
+                $scope.origin = {
                         p1: '   '
-                    },
-                    rules: {
+                    };
+                var rules = {
                         p1: 'required'
-                    }
-                };
+                    };
 
-                expectValidateFaill(data);
+                expectValidateFaill(rules);
             });
 
 
             it('should pass with property as Number', () => {
-                var data = {
-                    origin: {
+                $scope.origin = {
                         num: '123'
-                    },
-                    rules: {
-                        num: 'number'
-                    }
-                };
+                    };
 
-                expectValidatePass(data);
+                var rules = {
+                        num: 'number'
+                    };
+
+                expectValidatePass(rules);
             });
 
             it('should faill with property is not Number', () => {
-                var data = {
-                    origin: {
+                $scope.origin = {
                         num: 'abc'
-                    },
-                    rules: {
-                        num: 'number'
-                    }
-                };
+                    };
 
-                expectValidateFaill(data);
+                var  rules = {
+                        num: 'number'
+                    };
+
+                expectValidateFaill(rules);
             });
 
         });

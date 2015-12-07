@@ -1,6 +1,6 @@
 function RulesService($q, $rootScope){
-    return (origin, rules) => {
-        let $scope = $rootScope.$new(),
+    return ($scope, originName, rules) => {
+        let //$scope = $rootScope.$new(),
             ruleCollections = {
                 'required': (value) => {
                     return !(value === undefined || /^\s*$/.test(value));
@@ -14,10 +14,10 @@ function RulesService($q, $rootScope){
                 isPass: true
             };
 
-        angular.extend($scope, origin);
+        //angular.extend($scope, origin);
 
-        for(let p in origin){
-            $scope.$watch(p, function(value){
+        for(let p in $scope[originName]){
+            $scope.$watch(`${originName}.${p}`, function(value){
 
                 result.items[p] = ruleCollections[rules[p]](value);
 
