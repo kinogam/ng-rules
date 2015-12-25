@@ -1,23 +1,29 @@
-function RulesService($q, $rootScope){
-    return ($scope, originName, rules) => {
-        let //$scope = $rootScope.$new(),
-            ruleCollections = {
-                'required': (value) => {
-                    return !(value === undefined || /^\s*$/.test(value));
-                },
-                'number': (value) => {
-                    return /^-?\d+(?:\.\d+)?$/.test(value);
-                }
-            },
-            result = {
+import ruleCollections from './ng-rule-collection.service';
+
+function RulesService(){
+    return function(){
+
+        var $scope, originName, rules;
+
+        if(arguments.length === 2){
+            $scope = arguments[0];
+            rules = arguments[1];
+        }
+        else{
+            $scope = arguments[0];
+            originName = arguments[1];
+            rules = arguments[2];
+        }
+
+        let result = {
                 items: {},
                 isPass: true
             };
 
-        //angular.extend($scope, origin);
+        for(let p in rules){
+            let watchName = originName? `${originName}.${p}`: p;
 
-        for(let p in $scope[originName]){
-            $scope.$watch(`${originName}.${p}`, function(value){
+            $scope.$watch(watchName, function(value){
 
                 result.items[p] = ruleCollections[rules[p]](value);
 

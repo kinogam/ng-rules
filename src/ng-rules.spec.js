@@ -85,7 +85,29 @@ describe('ng-rules', () => {
                 expectValidateFaill(rules);
             });
 
+            it("don't need to specify a collection name", () => {
+                $scope.num = 'abc';
+
+                var rules = {
+                    num: 'number'
+                };
+
+                var r = $rules($scope, rules);
+
+                $scope.$digest();
+
+                expect(r.isPass).toBeFalsy();
+            });
+
+
+
         });
+
+ /*       describe('error description', () => {
+            it('can define an error description', () => {
+                $scope.
+            });
+        });*/
 
     });
 
