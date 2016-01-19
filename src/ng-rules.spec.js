@@ -9,16 +9,21 @@ describe('ng-rules', () => {
         $scope = $rootScope.$new();
     }));
 
-    function expectValidatePass(rules, value){
+    function expectValid(rules, value) {
         var r = $rules($scope, 'origin', rules);
 
         $scope.$digest();
 
-        expect(r.isPass).toBe(value !== undefined? value: true);
+        if(value !== undefined){
+            expect(r.$invalid).toBe(value);
+        }
+        else{
+            expect(r.$invalid).toBe(false);
+        }
     }
 
-    function expectValidateFaill(rules){
-        return expectValidatePass(rules, false);
+    function expectInvalid(rules) {
+        return expectValid(rules, true);
     }
 
     describe('single validate', () => {
@@ -32,57 +37,57 @@ describe('ng-rules', () => {
                 };
 
                 var rules = {
-                        p1: 'required'
-                    };
+                    p1: 'required'
+                };
 
-                expectValidatePass(rules);
+                expectValid(rules);
             });
 
             it('should fail with property is empty string', () => {
                 $scope.origin = {
-                        p1: ''
-                    };
+                    p1: ''
+                };
                 var rules = {
-                        p1: 'required'
-                    };
+                    p1: 'required'
+                };
 
-                expectValidateFaill(rules);
+                expectInvalid(rules);
             });
 
             it('should fail with property is spaces', () => {
                 $scope.origin = {
-                        p1: '   '
-                    };
+                    p1: '   '
+                };
                 var rules = {
-                        p1: 'required'
-                    };
+                    p1: 'required'
+                };
 
-                expectValidateFaill(rules);
+                expectInvalid(rules);
             });
 
 
             it('should pass with property as Number', () => {
                 $scope.origin = {
-                        num: '123'
-                    };
+                    num: '123'
+                };
 
                 var rules = {
-                        num: 'number'
-                    };
+                    num: 'number'
+                };
 
-                expectValidatePass(rules);
+                expectValid(rules);
             });
 
             it('should faill with property is not Number', () => {
                 $scope.origin = {
-                        num: 'abc'
-                    };
+                    num: 'abc'
+                };
 
-                var  rules = {
-                        num: 'number'
-                    };
+                var rules = {
+                    num: 'number'
+                };
 
-                expectValidateFaill(rules);
+                expectInvalid(rules);
             });
 
             it("don't need to specify a collection name", () => {
@@ -96,16 +101,51 @@ describe('ng-rules', () => {
 
                 $scope.$digest();
 
-                expect(r.isPass).toBeFalsy();
+                expect(r.$invalid).toBe(true);
             });
 
+            it('can watch variable change', () => {
+                $scope.num = 'abc';
+
+                var rules = {
+                    num: 'number'
+                };
+
+                var r = $rules($scope, rules);
+
+                $scope.$digest();
+
+                $scope.num = '123';
+
+                $scope.$digest();
+
+                expect(r.$invalid).toBe(false);
+            });
 
 
         });
 
- /*       describe('error description', () => {
+/*        describe('group validate', () => {
+
+            it('should pass if group data is validate')
+
+        });*/
+/*
+        describe('error description', () => {
             it('can define an error description', () => {
-                $scope.
+                $scope.num = 'abc';
+                let rules = {
+                        num: 'number'
+                    },
+                    message = {
+                        'num:number': 'number format error'
+                    };
+
+                let r = $rules($scope, rules, message);
+
+                $scope.$digest();
+
+                expect(r.num.$invalid)
             });
         });*/
 

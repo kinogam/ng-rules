@@ -8,15 +8,13 @@
     <script>
         angular.module('kino', ['ng-rules'])
                 .controller('MyController', function($scope, $rules){
-                    $scope.origin = {
-                        num: 123
-                    };
+                    $scope. num = 123;
 
                     var rules = {
                       "num": "number"
                     };
 
-                    var r = $rules($scope, 'orign', rules);
+                    var r = $rules($scope, rules);
 
                     $scope.r = r;
                 });
@@ -25,8 +23,8 @@
     </script>
 </head>
 <body ng-controller="MyController" ng-app="kino">
-<input type="text" ng-model="origin.num" />
+<input type="text" ng-model="num" />
 <br/>
-{{r.isPass}}
+{{r.$invalid}}
 </body>
 </html>
