@@ -16,23 +16,36 @@ function RulesService() {
         }
 
         let result = {
-            items: {},
             $invalid: false
         };
 
         for (let p in rules) {
-            let watchName = originName ? `${originName}.${p}` : p;
+            let watchName = originName ? `${originName}.${p}` : p,
+                rStr = rules[p],
+                isRequired = rStr.indexOf('required') !== -1,
+                rItems = rStr.split(/\s+\|\s+/);
 
             $scope.$watch(watchName, function (value) {
 
-                result.items[p] = ruleCollections[rules[p]](value);
-
-                if (!result.items[p]) {
-                    result.$invalid = true;
-                }
-                else{
+                if(!isRequired && !ruleCollections.required(value)){
                     result.$invalid = false;
+                    return;
                 }
+
+                for(let i = 0, len = rItems.length; i < len; i++){
+                    var machRuleStr = rItems[i];
+
+                    result[p] = ruleCollections[machRuleStr](value);
+
+                    if (!result[p]) {
+                        result.$invalid = true;
+                    }
+                    else{
+                        result.$invalid = false;
+                    }
+                }
+
+
             });
         }
 

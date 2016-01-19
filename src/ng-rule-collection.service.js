@@ -1,9 +1,12 @@
 export default {
     'required': (value) => {
-        return !(value === undefined || /^\s*$/.test(value));
+        return !(value === undefined || value === null || /^\s*$/.test(value));
     },
     'number': (value) => {
         return /^-?\d+(?:\.\d+)?$/.test(value);
+    },
+    'email': (value) => {
+        return /^(\w+|\.+)((-\w+|\.+)|(\.+\w+))*\@\w+((\.|-)\w+)*\.\w+/.test(value);
     }
 };
             
