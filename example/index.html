@@ -11,7 +11,7 @@
                     $scope. num = 123;
 
                     var rules = {
-                      "num": "number"
+                      "num": "number | maxLen: 5"
                     };
 
                     var r = $rules($scope, rules);

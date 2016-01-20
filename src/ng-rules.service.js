@@ -19,38 +19,60 @@ function RulesService() {
             $invalid: false
         };
 
-        for (let p in rules) {
-            let watchName = originName ? `${originName}.${p}` : p,
-                rStr = rules[p],
-                isRequired = rStr.indexOf('required') !== -1,
-                rItems = rStr.split(/\s+\|\s+/);
-
-            $scope.$watch(watchName, function (value) {
-
-                if(!isRequired && !ruleCollections.required(value)){
-                    result.$invalid = false;
-                    return;
-                }
-
-                for(let i = 0, len = rItems.length; i < len; i++){
-                    var rsp = rItems[i].split(/\s*:\s*/);
-                    var machRuleStr = rsp[0];
-
-                    result[p] = ruleCollections[machRuleStr](value, rsp[1]);
-
-                    if (!result[p]) {
-                        result.$invalid = true;
-                    }
-                    else{
-                        result.$invalid = false;
-                    }
-                }
-
-
-            });
-        }
+        watchItems();
 
         return result;
+
+
+        function watchItems(){
+            for (let p in rules) {
+                let watchName = originName ? `${originName}.${p}` : p,
+                    rStr = rules[p],
+                    isRequired = rStr.indexOf('required') !== -1,
+                    rItems = rStr.split(/\s+\|\s+/);
+
+
+                $scope.$watch(watchName, function (value) {
+                    if(value === undefined){
+                        return;
+                    }
+
+                    if(!isRequired && !ruleCollections.required(value)){
+                        result[p] = true;
+                        return;
+                    }
+
+                    for(let i = 0, len = rItems.length; i < len; i++){
+                        var rsp = rItems[i].split(/\s*:\s*/),
+                            machRuleStr = rsp[0],
+                            rItemMatchResult = ruleCollections[machRuleStr](value, rsp[1]);
+
+                        result[p] = rItemMatchResult;
+
+                        if(!rItemMatchResult){
+                            break;
+                        }
+                    }
+
+                    checkValid();
+                });
+            }
+        }
+
+        function checkValid(){
+            for(let p in result){
+                if(p === '$invalid'){
+                    continue;
+                }
+
+                if(!result[p]){
+                    result.$invalid = true;
+                    return;
+                }
+            }
+
+            result.$invalid = false;
+        }
     };
 }
 

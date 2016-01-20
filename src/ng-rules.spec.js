@@ -27,162 +27,193 @@ describe('ng-rules', () => {
         return expectValid(true);
     }
 
-    describe('single validate', () => {
+    describe('single field validation', () => {
 
-        describe('base', () => {
+        it('should pass with property is not empty', () => {
 
-            it('should pass with property is not empty', () => {
+            $scope.origin = {
+                p1: 'hello'
+            };
 
-                $scope.origin = {
-                    p1: 'hello'
-                };
+            rules = {
+                p1: 'required'
+            };
 
-                rules = {
-                    p1: 'required'
-                };
+            expectValid();
+        });
 
-                expectValid();
-            });
+        it('should fail with property is empty string', () => {
+            $scope.origin = {
+                p1: ''
+            };
+            rules = {
+                p1: 'required'
+            };
 
-            it('should fail with property is empty string', () => {
-                $scope.origin = {
-                    p1: ''
-                };
-                rules = {
-                    p1: 'required'
-                };
+            expectInvalid();
+        });
 
-                expectInvalid();
-            });
+        it('should fail with property is spaces', () => {
+            $scope.origin = {
+                p1: '   '
+            };
+            rules = {
+                p1: 'required'
+            };
 
-            it('should fail with property is spaces', () => {
-                $scope.origin = {
-                    p1: '   '
-                };
-                rules = {
-                    p1: 'required'
-                };
+            expectInvalid();
+        });
 
-                expectInvalid();
-            });
+        it("don't need to specify a collection name", () => {
+            $scope.num = 'abc';
 
-            it("don't need to specify a collection name", () => {
-                $scope.num = 'abc';
+            rules = {
+                num: 'number'
+            };
 
-                rules = {
-                    num: 'number'
-                };
+            var r = $rules($scope, rules);
 
-                var r = $rules($scope, rules);
+            $scope.$digest();
 
-                $scope.$digest();
+            expect(r.$invalid).toBe(true);
+        });
 
-                expect(r.$invalid).toBe(true);
-            });
+        it('can watch variable change', () => {
+            $scope.num = 'abc';
 
-            it('can watch variable change', () => {
-                $scope.num = 'abc';
+            rules = {
+                num: 'number'
+            };
 
-                rules = {
-                    num: 'number'
-                };
+            var r = $rules($scope, rules);
 
-                var r = $rules($scope, rules);
+            $scope.$digest();
 
-                $scope.$digest();
+            $scope.num = '123';
 
-                $scope.num = '123';
+            $scope.$digest();
 
-                $scope.$digest();
+            expect(r.$invalid).toBe(false);
+        });
 
-                expect(r.$invalid).toBe(false);
-            });
+        it('should pass with property as Number', () => {
+            $scope.origin = {
+                num: '123'
+            };
 
-            it('should pass with property as Number', () => {
-                $scope.origin = {
-                    num: '123'
-                };
+            rules = {
+                num: 'number'
+            };
 
-                rules = {
-                    num: 'number'
-                };
+            expectValid();
+        });
 
-                expectValid();
-            });
+        it('should faill with property is not Number', () => {
+            $scope.origin = {
+                num: 'abc'
+            };
 
-            it('should faill with property is not Number', () => {
-                $scope.origin = {
-                    num: 'abc'
-                };
+            rules = {
+                num: 'number'
+            };
 
-                rules = {
-                    num: 'number'
-                };
+            expectInvalid();
+        });
 
-                expectInvalid();
-            });
+        it('should pass with property as Email Address', () => {
+            $scope.origin = {
+                email: 'kinogam@gmail.com'
+            };
 
-            it('should pass with property as Email Address', () => {
-                $scope.origin = {
-                    email: 'kinogam@gmail.com'
-                };
+            rules = {
+                email: 'email'
+            };
 
-                rules = {
-                    email: 'email'
-                };
+            expectValid();
+        });
 
-                expectValid();
-            });
+        it('should faill with property is not Address', () => {
+            $scope.origin = {
+                email: '@kinogl.com!'
+            };
 
-            it('should faill with property is not Address', () => {
-                $scope.origin = {
-                    email: '@kinogl.com!'
-                };
+            rules = {
+                email: 'email'
+            };
 
-                rules = {
-                    email: 'email'
-                };
+            expectInvalid();
+        });
 
-                expectInvalid();
-            });
+        it('should allow empty field while not specify required', () => {
+            $scope.origin = {
+                email: null
+            };
 
-            it('should allow empty field while not specify required', () => {
-                $scope.origin = {
-                    email: null
-                };
+            rules = {
+                email: 'email'
+            };
 
-                rules = {
-                    email: 'email'
-                };
+            expectValid();
+        });
 
-                expectValid();
-            });
+        it('should be invalid if specify field required and the field is empty', () => {
+            $scope.origin = {
+                email: null
+            };
 
-            it('should be invalid if specify field required and the field is empty', () => {
-                $scope.origin = {
-                    email: null
-                };
+            rules = {
+                email: 'required | email'
+            };
 
-                rules = {
-                    email: 'required | email'
-                };
+            expectInvalid();
+        });
 
-                expectInvalid();
-            });
+        it('should limit field length', () => {
+            $scope.origin = {
+                name: 'kino1'
+            };
 
-            it('should limit field length', () => {
-                $scope.origin = {
-                    name: 'kino'
-                };
+            rules = {
+                name: 'maxLen: 5'
+            };
 
-                rules = {
-                    name: 'maxLen: 5'
-                };
+            expectValid();
+        });
 
-                expectValid();
-            });
+        it('should be invalid if out of field length limit', () => {
+            $scope.origin = {
+                name: 'kinogam'
+            };
 
+            rules = {
+                name: 'maxLen: 5'
+            };
 
+            expectInvalid();
+        });
+
+        it('should limit field by multiple rules', () => {
+            $scope.origin = {
+                email: 'kino@gmail.com'
+            };
+
+            rules = {
+                name: 'email | maxLen: 14'
+            };
+
+            expectValid();
+        });
+
+        it('should be invalid if filed not match multiple rules', () => {
+            $scope.origin = {
+                email: 'kinogam@gmail.com'
+            };
+
+            rules = {
+                email: 'email | maxLen: 14'
+            };
+
+            expectInvalid();
         });
 
 /*        describe('group validate', () => {

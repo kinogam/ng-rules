@@ -10,7 +10,7 @@ export default {
     },
     'maxLen': (value, len) => {
         var rps_value = value.replace(/^\s+|\s+$/g, '');
-        return rps_value.length < len;
+        return rps_value.length <= len;
     }
 };
             
