@@ -1,5 +1,6 @@
 describe('ng-rules', () => {
     let $rules,
+        rules,
         $scope;
 
     beforeEach(angular.mock.module('ng-rules'));
@@ -9,7 +10,7 @@ describe('ng-rules', () => {
         $scope = $rootScope.$new();
     }));
 
-    function expectValid(rules, value) {
+    function expectValid(value) {
         var r = $rules($scope, 'origin', rules);
 
         $scope.$digest();
@@ -22,8 +23,8 @@ describe('ng-rules', () => {
         }
     }
 
-    function expectInvalid(rules) {
-        return expectValid(rules, true);
+    function expectInvalid() {
+        return expectValid(true);
     }
 
     describe('single validate', () => {
@@ -36,39 +37,39 @@ describe('ng-rules', () => {
                     p1: 'hello'
                 };
 
-                var rules = {
+                rules = {
                     p1: 'required'
                 };
 
-                expectValid(rules);
+                expectValid();
             });
 
             it('should fail with property is empty string', () => {
                 $scope.origin = {
                     p1: ''
                 };
-                var rules = {
+                rules = {
                     p1: 'required'
                 };
 
-                expectInvalid(rules);
+                expectInvalid();
             });
 
             it('should fail with property is spaces', () => {
                 $scope.origin = {
                     p1: '   '
                 };
-                var rules = {
+                rules = {
                     p1: 'required'
                 };
 
-                expectInvalid(rules);
+                expectInvalid();
             });
 
             it("don't need to specify a collection name", () => {
                 $scope.num = 'abc';
 
-                var rules = {
+                rules = {
                     num: 'number'
                 };
 
@@ -82,7 +83,7 @@ describe('ng-rules', () => {
             it('can watch variable change', () => {
                 $scope.num = 'abc';
 
-                var rules = {
+                rules = {
                     num: 'number'
                 };
 
@@ -102,11 +103,11 @@ describe('ng-rules', () => {
                     num: '123'
                 };
 
-                var rules = {
+                rules = {
                     num: 'number'
                 };
 
-                expectValid(rules);
+                expectValid();
             });
 
             it('should faill with property is not Number', () => {
@@ -114,11 +115,11 @@ describe('ng-rules', () => {
                     num: 'abc'
                 };
 
-                var rules = {
+                rules = {
                     num: 'number'
                 };
 
-                expectInvalid(rules);
+                expectInvalid();
             });
 
             it('should pass with property as Email Address', () => {
@@ -126,11 +127,11 @@ describe('ng-rules', () => {
                     email: 'kinogam@gmail.com'
                 };
 
-                var rules = {
+                rules = {
                     email: 'email'
                 };
 
-                expectValid(rules);
+                expectValid();
             });
 
             it('should faill with property is not Address', () => {
@@ -138,11 +139,11 @@ describe('ng-rules', () => {
                     email: '@kinogl.com!'
                 };
 
-                var rules = {
+                rules = {
                     email: 'email'
                 };
 
-                expectInvalid(rules);
+                expectInvalid();
             });
 
             it('should allow empty field while not specify required', () => {
@@ -150,11 +151,11 @@ describe('ng-rules', () => {
                     email: null
                 };
 
-                var rules = {
+                rules = {
                     email: 'email'
                 };
 
-                expectValid(rules);
+                expectValid();
             });
 
             it('should be invalid if specify field required and the field is empty', () => {
@@ -162,11 +163,11 @@ describe('ng-rules', () => {
                     email: null
                 };
 
-                var rules = {
+                rules = {
                     email: 'required | email'
                 };
 
-                expectInvalid(rules);
+                expectInvalid();
             });
 
 
