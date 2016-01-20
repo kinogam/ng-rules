@@ -170,6 +170,18 @@ describe('ng-rules', () => {
                 expectInvalid();
             });
 
+            it('should limit field length', () => {
+                $scope.origin = {
+                    name: 'kino'
+                };
+
+                rules = {
+                    name: 'maxLen: 5'
+                };
+
+                expectValid();
+            });
+
 
         });
 

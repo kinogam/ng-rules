@@ -33,9 +33,10 @@ function RulesService() {
                 }
 
                 for(let i = 0, len = rItems.length; i < len; i++){
-                    var machRuleStr = rItems[i];
+                    var rsp = rItems[i].split(/\s*:\s*/);
+                    var machRuleStr = rsp[0];
 
-                    result[p] = ruleCollections[machRuleStr](value);
+                    result[p] = ruleCollections[machRuleStr](value, rsp[1]);
 
                     if (!result[p]) {
                         result.$invalid = true;
