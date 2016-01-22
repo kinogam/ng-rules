@@ -4,7 +4,7 @@ describe('ng-rules', () => {
         $scope,
         $timeout;
 
-    beforeEach(angular.mock.module('ng-rules'));
+    beforeEach(angular.mock.module('ngRules'));
 
     beforeEach(inject((_$rules_, $rootScope, _$timeout_) => {
         $rules = _$rules_;
@@ -12,11 +12,23 @@ describe('ng-rules', () => {
         $timeout = _$timeout_;
     }));
 
-    function expectValid(value) {
-        var r = $rules($scope, 'origin', rules);
+    function expectValid(originName, value) {
+
+        var r;
+
+        if(angular.isDefined(originName)){
+            r = $rules($scope, originName, rules);
+        }
+        else{
+            r = $rules($scope, rules);
+        }
 
         $scope.$digest();
-        $timeout.flush();
+        try{
+            $timeout.flush();
+        }catch(e){
+            return;
+        }
 
         if(angular.isDefined(value)){
             expect(r.$invalid).toBe(value);
@@ -26,8 +38,8 @@ describe('ng-rules', () => {
         }
     }
 
-    function expectInvalid() {
-        return expectValid(true);
+    function expectInvalid(originName) {
+        return expectValid(originName, true);
     }
 
     describe('single field validation', () => {
@@ -42,7 +54,7 @@ describe('ng-rules', () => {
                 p1: 'required'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should fail with property is empty string', () => {
@@ -53,7 +65,7 @@ describe('ng-rules', () => {
                 p1: 'required'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it('should fail with property is spaces', () => {
@@ -64,7 +76,7 @@ describe('ng-rules', () => {
                 p1: 'required'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it("don't need to specify a collection name", () => {
@@ -74,11 +86,7 @@ describe('ng-rules', () => {
                 num: 'number'
             };
 
-            var r = $rules($scope, rules);
-
-            $scope.$digest();
-
-            expect(r.$invalid).toBe(true);
+            expectInvalid();
         });
 
         it('can watch variable change', () => {
@@ -88,15 +96,11 @@ describe('ng-rules', () => {
                 num: 'number'
             };
 
-            var r = $rules($scope, rules);
-
-            $scope.$digest();
+            expectInvalid();
 
             $scope.num = '123';
 
-            $scope.$digest();
-
-            expect(r.$invalid).toBe(false);
+            expectValid();
         });
 
         it('should pass with property as Number', () => {
@@ -108,7 +112,7 @@ describe('ng-rules', () => {
                 num: 'number'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should faill with property is not Number', () => {
@@ -120,7 +124,7 @@ describe('ng-rules', () => {
                 num: 'number'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it('should pass with property as Email Address', () => {
@@ -132,7 +136,7 @@ describe('ng-rules', () => {
                 email: 'email'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should faill with property is not Address', () => {
@@ -144,7 +148,7 @@ describe('ng-rules', () => {
                 email: 'email'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it('should allow empty field while not specify required', () => {
@@ -156,7 +160,7 @@ describe('ng-rules', () => {
                 email: 'email'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should be invalid if specify field required and the field is empty', () => {
@@ -168,7 +172,7 @@ describe('ng-rules', () => {
                 email: 'required | email'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it('should limit field length', () => {
@@ -180,7 +184,7 @@ describe('ng-rules', () => {
                 name: 'maxLen: 5'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should be invalid if out of field length limit', () => {
@@ -192,7 +196,7 @@ describe('ng-rules', () => {
                 name: 'maxLen: 5'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
         it('should limit field by multiple rules', () => {
@@ -204,7 +208,7 @@ describe('ng-rules', () => {
                 name: 'email | maxLen: 14'
             };
 
-            expectValid();
+            expectValid('origin');
         });
 
         it('should be invalid if filed not match multiple rules', () => {
@@ -216,7 +220,7 @@ describe('ng-rules', () => {
                 email: 'email | maxLen: 14'
             };
 
-            expectInvalid();
+            expectInvalid('origin');
         });
 
 /*        describe('group validate', () => {

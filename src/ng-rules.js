@@ -1,4 +1,4 @@
 import RulesService from './ng-rules.service';
 
-angular.module('ng-rules', [])
+angular.module('ngRules', [])
 .factory('$rules', RulesService);
