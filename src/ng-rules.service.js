@@ -1,9 +1,11 @@
 import ruleCollections from './ng-rule-collection.service';
 
-function RulesService() {
+function RulesService($timeout) {
+    'ngInject';
+
     return function () {
 
-        var $scope, originName, rules;
+        var $scope, originName, rules, timeChecker;
 
         if (arguments.length === 2) {
             $scope = arguments[0];
@@ -33,7 +35,7 @@ function RulesService() {
 
 
                 $scope.$watch(watchName, function (value) {
-                    if(value === undefined){
+                    if(angular.isUndefined(value)){
                         return;
                     }
 
@@ -54,7 +56,8 @@ function RulesService() {
                         }
                     }
 
-                    checkValid();
+                    timeChecker && timeChecker.cancel();
+                    timeChecker = $timeout(checkValid, 600);
                 });
             }
         }

@@ -1,21 +1,24 @@
 describe('ng-rules', () => {
     let $rules,
         rules,
-        $scope;
+        $scope,
+        $timeout;
 
     beforeEach(angular.mock.module('ng-rules'));
 
-    beforeEach(inject((_$rules_, $rootScope) => {
+    beforeEach(inject((_$rules_, $rootScope, _$timeout_) => {
         $rules = _$rules_;
         $scope = $rootScope.$new();
+        $timeout = _$timeout_;
     }));
 
     function expectValid(value) {
         var r = $rules($scope, 'origin', rules);
 
         $scope.$digest();
+        $timeout.flush();
 
-        if(value !== undefined){
+        if(angular.isDefined(value)){
             expect(r.$invalid).toBe(value);
         }
         else{

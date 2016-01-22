@@ -1,6 +1,6 @@
 export default {
     'required': (value) => {
-        return !(value === undefined || value === null || /^\s*$/.test(value));
+        return !(angular.isUndefined(value) || value === null || /^\s*$/.test(value));
     },
     'number': (value) => {
         return /^-?\d+(?:\.\d+)?$/.test(value);
