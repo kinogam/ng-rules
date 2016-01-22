@@ -56,8 +56,8 @@ function RulesService($timeout) {
                         }
                     }
 
-                    timeChecker && timeChecker.cancel();
-                    timeChecker = $timeout(checkValid, 600);
+                    timeChecker && $timeout.cancel(timeChecker);
+                    timeChecker = $timeout(checkValid, 60);
                 });
             }
         }
