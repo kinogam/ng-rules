@@ -18,7 +18,7 @@ function webpackWrapper(watch, test, callback) {
     output: { filename: 'ng-rules.js' }
   };
 
-  if(watch) {
+  if(watch || test) {
     webpackOptions.devtool = 'inline-source-map';
   }
 
