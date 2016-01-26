@@ -36,8 +36,7 @@ function RulesService($timeout) {
                     isRequired = rStr.indexOf('required') !== -1,
                     rItems = rStr.split(/\s+\|\s+/);
 
-
-
+                result[p] = {$invalid: false};
 
                 $scope.$watch(watchName, function (value) {
                     if(angular.isUndefined(value)){
@@ -45,7 +44,7 @@ function RulesService($timeout) {
                     }
 
                     if(!isRequired && !customRules.required(value)){
-                        result[p] = true;
+                        result[p].$invalid = false;
                         return;
                     }
 
@@ -54,7 +53,7 @@ function RulesService($timeout) {
                             machRuleStr = rsp[0],
                             rItemMatchResult = customRules[machRuleStr](value, rsp[1]);
 
-                        result[p] = rItemMatchResult;
+                        result[p].$invalid = !rItemMatchResult;
 
                         if(!rItemMatchResult){
                             break;
@@ -73,7 +72,7 @@ function RulesService($timeout) {
                     continue;
                 }
 
-                if(!result[p]){
+                if(result[p].$invalid){
                     result.$invalid = true;
                     return;
                 }

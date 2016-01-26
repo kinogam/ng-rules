@@ -13,6 +13,15 @@ describe('ng-rules', () => {
         $timeout = _$timeout_;
     }));
 
+    function  run(){
+        $scope.$digest();
+        try{
+            $timeout.flush();
+        }catch(e){
+            return;
+        }
+    }
+
     function expectValid(originName, value) {
         if(angular.isUndefined(r) && angular.isDefined(originName)){
             r = $rules($scope, originName, rules);
@@ -239,6 +248,21 @@ describe('ng-rules', () => {
             $scope.myValue = 'a323b';
 
             expectInvalid();
+        });
+
+        it('should has field validate status', () => {
+            $scope.hello = '123';
+
+            rules = {
+                hello: 'number'
+            };
+
+            r = $rules($scope, rules);
+
+            run();
+
+            expect(r.hello.$invalid).toBe(false);
+
         });
 
 /*        describe('group validate', () => {
