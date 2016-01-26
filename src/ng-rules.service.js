@@ -5,7 +5,8 @@ function RulesService($timeout) {
 
     return function () {
 
-        var $scope, originName, rules, timeChecker;
+        var $scope, originName, rules, timeChecker,
+            customRules = angular.copy(ruleCollections);
 
         if (arguments.length === 2) {
             $scope = arguments[0];
@@ -18,7 +19,8 @@ function RulesService($timeout) {
         }
 
         let result = {
-            $invalid: false
+            $invalid: false,
+            $setRule: setRule
         };
 
         watchItems();
@@ -27,6 +29,7 @@ function RulesService($timeout) {
 
 
         function watchItems(){
+
             for (let p in rules) {
                 let watchName = originName ? `${originName}.${p}` : p,
                     rStr = rules[p],
@@ -34,12 +37,14 @@ function RulesService($timeout) {
                     rItems = rStr.split(/\s+\|\s+/);
 
 
+
+
                 $scope.$watch(watchName, function (value) {
                     if(angular.isUndefined(value)){
                         return;
                     }
 
-                    if(!isRequired && !ruleCollections.required(value)){
+                    if(!isRequired && !customRules.required(value)){
                         result[p] = true;
                         return;
                     }
@@ -47,7 +52,7 @@ function RulesService($timeout) {
                     for(let i = 0, len = rItems.length; i < len; i++){
                         var rsp = rItems[i].split(/\s*:\s*/),
                             machRuleStr = rsp[0],
-                            rItemMatchResult = ruleCollections[machRuleStr](value, rsp[1]);
+                            rItemMatchResult = customRules[machRuleStr](value, rsp[1]);
 
                         result[p] = rItemMatchResult;
 
@@ -75,6 +80,10 @@ function RulesService($timeout) {
             }
 
             result.$invalid = false;
+        }
+
+        function setRule(ruleName, method){
+            customRules[ruleName] = method;
         }
     };
 }

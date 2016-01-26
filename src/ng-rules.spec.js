@@ -2,7 +2,8 @@ describe('ng-rules', () => {
     let $rules,
         rules,
         $scope,
-        $timeout;
+        $timeout,
+        r;
 
     beforeEach(angular.mock.module('ngRules'));
 
@@ -13,13 +14,10 @@ describe('ng-rules', () => {
     }));
 
     function expectValid(originName, value) {
-
-        var r;
-
-        if(angular.isDefined(originName)){
+        if(angular.isUndefined(r) && angular.isDefined(originName)){
             r = $rules($scope, originName, rules);
         }
-        else{
+        else if(angular.isUndefined(r)){
             r = $rules($scope, rules);
         }
 
@@ -221,6 +219,26 @@ describe('ng-rules', () => {
             };
 
             expectInvalid('origin');
+        });
+
+        it('should support custom rule', () => {
+           $scope.myValue = '5abc6';
+
+            rules = {
+                myValue: 'customRule'
+            };
+
+            r = $rules($scope, rules);
+
+            r.$setRule('customRule', (value) => {
+                return /^\d[a-z]+\d$/.test(value);
+            });
+
+            expectValid();
+
+            $scope.myValue = 'a323b';
+
+            expectInvalid();
         });
 
 /*        describe('group validate', () => {
