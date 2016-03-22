@@ -13,34 +13,34 @@ describe('ng-rules', () => {
         $timeout = _$timeout_;
     }));
 
-    function  run(){
+    function run() {
         $scope.$digest();
-        try{
+        try {
             $timeout.flush();
-        }catch(e){
+        } catch (e) {
             return;
         }
     }
 
     function expectValid(originName, value) {
-        if(angular.isUndefined(r) && angular.isDefined(originName)){
+        if (angular.isUndefined(r) && angular.isDefined(originName)) {
             r = $rules($scope, originName, rules);
         }
-        else if(angular.isUndefined(r)){
+        else if (angular.isUndefined(r)) {
             r = $rules($scope, rules);
         }
 
         $scope.$digest();
-        try{
+        try {
             $timeout.flush();
-        }catch(e){
+        } catch (e) {
             return;
         }
 
-        if(angular.isDefined(value)){
+        if (angular.isDefined(value)) {
             expect(r.$invalid).toBe(value);
         }
-        else{
+        else {
             expect(r.$invalid).toBe(false);
         }
     }
@@ -231,7 +231,7 @@ describe('ng-rules', () => {
         });
 
         it('should support custom rule', () => {
-           $scope.myValue = '5abc6';
+            $scope.myValue = '5abc6';
 
             rules = {
                 myValue: 'customRule'
@@ -265,29 +265,74 @@ describe('ng-rules', () => {
 
         });
 
-/*        describe('group validate', () => {
+        it('can use wildcards', () => {
+            $scope.obj = {
+                firstName: 'kino',
+                lastName: 'tesr'
+            };
 
-            it('should pass if group data is validate')
+            rules = {
+                '*': 'required'
+            };
 
-        });*/
-/*
-        describe('error description', () => {
-            it('can define an error description', () => {
-                $scope.num = 'abc';
-                let rules = {
-                        num: 'number'
-                    },
-                    message = {
-                        'num:number': 'number format error'
-                    };
+            r = $rules($scope, 'obj',  rules);
 
-                let r = $rules($scope, rules, message);
+            run();
 
-                $scope.$digest();
+            expect(r.$invalid).toBe(false);
+        });
 
-                expect(r.num.$invalid)
-            });
-        });*/
+
+        /*
+         describe('error description', () => {
+         it('can define an error description', () => {
+         $scope.num = 'abc';
+         let rules = {
+         num: 'number'
+         },
+         message = {
+         'num:number': 'number format error'
+         };
+
+         let r = $rules($scope, rules, message);
+
+         $scope.$digest();
+
+         expect(r.num.$invalid)
+         });
+         });*/
+
+    });
+
+
+    describe('group validate', () => {
+        /*
+         it('should validate group', () => {
+         $scope.query = {
+         segments: [
+         {
+         depCity: 'can',
+         arrCity: 'lax',
+         date: '2016-08-06'
+         },
+         {
+         depCity: 'lax',
+         arrCity: 'can',
+         date: ''
+         }
+         ]
+         };
+
+         rules = {
+         '*': 'required'
+         };
+
+         r = $rules($scope, 'query.segments', rules);
+
+         expect(r.query.segments[1].date.$invalid).toBe(true);
+
+
+         });*/
 
     });
 
