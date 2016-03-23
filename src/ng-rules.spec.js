@@ -275,7 +275,7 @@ describe('ng-rules', () => {
                 '*': 'required'
             };
 
-            r = $rules($scope, 'obj',  rules);
+            r = $rules($scope, 'obj', rules);
 
             run();
 
@@ -306,34 +306,36 @@ describe('ng-rules', () => {
 
 
     describe('group validate', () => {
-        /*
-         it('should validate group', () => {
-         $scope.query = {
-         segments: [
-         {
-         depCity: 'can',
-         arrCity: 'lax',
-         date: '2016-08-06'
-         },
-         {
-         depCity: 'lax',
-         arrCity: 'can',
-         date: ''
-         }
-         ]
-         };
 
-         rules = {
-         '*': 'required'
-         };
+        it('should validate group', () => {
+            $scope.query = {
+                segments: [
+                    {
+                        depCity: 'can',
+                        arrCity: 'lax',
+                        date: '2016-08-06'
+                    },
+                    {
+                        depCity: 'lax',
+                        arrCity: 'can',
+                        date: ''
+                    }
+                ]
+            };
 
-         r = $rules($scope, 'query.segments', rules);
+            rules = {
+                '*': 'required'
+            };
 
-         expect(r.query.segments[1].date.$invalid).toBe(true);
+            r = $rules($scope, 'query.segments', rules);
 
+            run();
 
-         });*/
+            expect(r[1].date.$invalid).toBe(true);
+        });
 
     });
+
+
 
 });

@@ -2,11 +2,16 @@ function analyzeOriginRules(originRules, $scope, originName) {
     let analyzeScope, newRules = {};
 
     if (originName) {
-        analyzeScope = $scope[originName];
+        analyzeScope = $scope.$eval(originName);
+        if(angular.isArray(analyzeScope)){
+            analyzeScope = analyzeScope[0];
+        }
     }
     else {
         analyzeScope = $scope;
     }
+
+
 
     for (let p in originRules) {
         let ruleStr = originRules[p];
@@ -36,9 +41,7 @@ function updateRule(rules, p, ruleStr) {
 
     for (let i = 0, len = sp.length; i < len; i++) {
         var rsp = sp[i].split(/\s*:\s*/),
-            methodName = rsp.splice(0, 1);
-
-
+            methodName = rsp.splice(0, 1)[0];
 
         rItem.push({
             methodName: methodName,
