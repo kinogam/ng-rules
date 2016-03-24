@@ -33,6 +33,11 @@ function RulesService($timeout) {
 
         rules = analyzeOriginRules(originRules, $scope, originName);
 
+
+        let watchList = [];
+
+        cancelWatchItems();
+        
         watchItems();
 
         return result;
@@ -62,7 +67,7 @@ function RulesService($timeout) {
 
                     createProp(result, `${currentPrefix}${p}`, {$invalid: false});
 
-                    $scope.$watch(watchExpression[0], function (value) {
+                    let watchFn = $scope.$watch(watchExpression[0], function (value) {
                         if (angular.isUndefined(value)) {
                             return;
                         }
@@ -84,8 +89,18 @@ function RulesService($timeout) {
                             checkValid(result);
                         }, 60);
                     });
+
+                    watchList.push(watchFn);
                 });
             }
+        }
+        
+        function cancelWatchItems() {
+            watchList.forEach((clear) => {
+                clear();
+            });
+
+            watchList = [];
         }
 
         function checkValid(obj) {
@@ -131,6 +146,14 @@ function RulesService($timeout) {
 
             if (angular.isDefined(originName) && angular.isArray(source = $scope.$eval(originName))) {
                 result = [];
+                $scope.$watch(() => {
+                    return source.length;
+                }, (newValue, oldValue) => {
+                    if(newValue !== oldValue){
+                        cancelWatchItems();
+                        watchItems();
+                    }
+                })
             }
             else {
                 result = {};

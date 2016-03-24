@@ -335,6 +335,41 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(true);
         });
 
+        it('validate dynamic array', () => {
+            $scope.query = {
+                segments: [
+                    {
+                        depCity: 'can',
+                        arrCity: 'lax',
+                        date: '2016-08-06'
+                    },
+                    {
+                        depCity: 'lax',
+                        arrCity: 'can',
+                        date: ''
+                    }
+                ]
+            };
+
+            rules = {
+                '*': 'required'
+            };
+
+            r = $rules($scope, 'query.segments', rules);
+
+            run();
+
+            $scope.query.segments.push({
+                depCity: '',
+                arrCity: '',
+                date: ''
+            });
+
+            run();
+            
+            expect(r.$invalid).toBe(true);
+        });
+
     });
 
 
