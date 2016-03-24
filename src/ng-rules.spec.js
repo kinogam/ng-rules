@@ -332,10 +332,11 @@ describe('ng-rules', () => {
             run();
 
             expect(r[1].date.$invalid).toBe(true);
+            expect(r.$invalid).toBe(true);
         });
 
     });
 
 
-
 });
+

@@ -4,6 +4,8 @@ import analyzeOriginRules from './analyze-origin-rules';
 angular.module('ngRules', [])
     .factory('$rules', RulesService);
 
+
+
 function RulesService($timeout) {
     'ngInject';
 
@@ -39,28 +41,15 @@ function RulesService($timeout) {
         function watchItems() {
             for (let p in rules) {
                 let watchExpressionList = [],
-                   // prefix = '',
                     rItems = rules[p];
 
 
                 if (angular.isDefined(originName) && angular.isArray(source)) {
-
                     source.forEach((item, index) => {
                         watchExpressionList.push([function () {
                             return item[p];
                         }, index]);
                     });
-
-                    //namespace(result, originName)
-                    //prefix = originName;
-/*
-
-                    if (angular.isArray(source)) {
-
-                    }
-                    else {
-                        watchExpressionList = [[p]];
-                    }*/
                 }
                 else {
                     watchExpressionList = [[p]];
@@ -90,25 +79,47 @@ function RulesService($timeout) {
                         }
 
                         timeChecker && $timeout.cancel(timeChecker);
-                        timeChecker = $timeout(checkValid, 60);
+
+                        timeChecker = $timeout(() => {
+                            checkValid(result);
+                        }, 60);
                     });
                 });
             }
         }
 
-        function checkValid() {
-            for (let p in result) {
-                if (p === '$invalid') {
-                    continue;
-                }
+        function checkValid(obj) {
 
-                if (result[p].$invalid) {
-                    result.$invalid = true;
-                    return;
+            if (angular.isArray(obj)) {
+                for(var i = 0, len = obj.length; i < len; i++){
+                    var arrayItem = obj[i];
+                    for (let p in arrayItem) {
+                        if (/^$/.test(p)) {
+                            continue;
+                        }
+
+                        if (arrayItem[p].$invalid) {
+                            obj.$invalid = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            else {
+                for (let p in obj) {
+
+                    if (/^$/.test(p)) {
+                        continue;
+                    }
+
+                    if (obj[p].$invalid) {
+                        obj.$invalid = true;
+                        return;
+                    }
                 }
             }
 
-            result.$invalid = false;
+            obj.$invalid = false;
         }
 
         function setRule(ruleName, method) {
