@@ -40,12 +40,26 @@ function updateRule(rules, p, ruleStr) {
     let rItem = rules[p];
 
     for (let i = 0, len = sp.length; i < len; i++) {
-        var rsp = sp[i].split(/\s*:\s*/),
-            methodName = rsp.splice(0, 1)[0];
+        let rsp = sp[i].split(/\s*:\s*/),
+            methodName = rsp.splice(0, 1)[0].replace(/^\s+|\s+$/, ''),
+            isReverse = false;
+
+
+        if(rsp.length > 0){
+            rsp = rsp.map(function (item) {
+                return item.replace(/^\s+|\s+$/, '');
+            });
+        }
+
+        if(methodName.indexOf('!') !== -1){
+            isReverse = true;
+            methodName = methodName.substr(1);
+        }
 
         rItem.push({
             methodName: methodName,
-            params: rsp
+            params: rsp,
+            isReverse: isReverse
         });
     }
 }

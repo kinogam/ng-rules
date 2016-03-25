@@ -282,6 +282,44 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(false);
         });
 
+        it('should restrict property equal a specify value', () => {
+            $scope.dep = 'can';
+            $scope.arr = 'can';
+
+            rules = {
+                'dep': 'eq:can',
+                'arr': 'eq: can '
+            };
+
+            r = $rules($scope, rules);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+
+            $scope.arr = 'cand';
+
+            run();
+
+            expect(r.$invalid).toBe(true);
+        });
+
+        it('should restrict property not equal a specify value', () => {
+            $scope.dep = 'can';
+
+            rules = {
+                'dep': '!eq:can'
+            };
+
+            r = $rules($scope, rules);
+
+            run();
+
+            expect(r.$invalid).toBe(true);
+        });
+
+
+
 
         /*
          describe('error description', () => {

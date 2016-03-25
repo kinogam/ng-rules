@@ -12,6 +12,9 @@ export default {
         let str = String(value),
             rps_value = str.replace(/^\s+|\s+$/g, '');
         return rps_value.length <= len;
+    },
+    'eq': (orginVal, compareVal) => {
+        return orginVal === compareVal;
     }
 };
             

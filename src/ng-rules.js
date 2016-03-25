@@ -53,11 +53,11 @@ function RulesService($timeout) {
                     source.forEach((item, index) => {
                         watchExpressionList.push([function () {
                             return item[p];
-                        }, index]);
+                        }, index, item]);
                     });
                 }
                 else {
-                    watchExpressionList = [[p]];
+                    watchExpressionList = [[p, undefined, $scope]];
                 }
 
 
@@ -74,7 +74,11 @@ function RulesService($timeout) {
 
                         for (let i = 0, len = rItems.length; i < len; i++) {
                             let ri = rItems[i],
-                                rItemMatchResult = customRules[ri.methodName].apply(customRules, [value].concat(ri.params));
+                                rItemMatchResult = customRules[ri.methodName].apply(watchExpression[2], [value].concat(ri.params));
+
+                            if(ri.isReverse){
+                                rItemMatchResult = !rItemMatchResult;
+                            }
 
                             createProp(result, `${currentPrefix}${p}.$invalid`, !rItemMatchResult);
 
