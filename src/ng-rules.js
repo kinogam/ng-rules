@@ -146,10 +146,8 @@ function RulesService($timeout) {
 
             if (angular.isDefined(originName) && angular.isArray(source = $scope.$eval(originName))) {
                 result = [];
-                $scope.$watch(() => {
-                    return source.length;
-                }, (newValue, oldValue) => {
-                    if(newValue !== oldValue){
+                $scope.$watchCollection(originName, (val) => {
+                    if(angular.isDefined(val)){
                         cancelWatchItems();
                         watchItems();
                     }

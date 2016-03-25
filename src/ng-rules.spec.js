@@ -335,7 +335,7 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(true);
         });
 
-        it('validate dynamic array', () => {
+        it('should validate dynamic array', () => {
             $scope.query = {
                 segments: [
                     {
@@ -343,6 +343,38 @@ describe('ng-rules', () => {
                         arrCity: 'lax',
                         date: '2016-08-06'
                     },
+                    {
+                        depCity: 'lax',
+                        arrCity: 'can',
+                        date: '2016-08-08'
+                    }
+                ]
+            };
+
+            rules = {
+                '*': 'required'
+            };
+
+            r = $rules($scope, 'query.segments', rules);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+
+            $scope.query.segments.push({
+                depCity: '',
+                arrCity: '',
+                date: ''
+            });
+
+            run();
+
+            expect(r.$invalid).toBe(true);
+        });
+
+        it('should watch the value change', () => {
+            $scope.query = {
+                segments: [
                     {
                         depCity: 'lax',
                         arrCity: 'can',
@@ -359,14 +391,22 @@ describe('ng-rules', () => {
 
             run();
 
-            $scope.query.segments.push({
-                depCity: '',
-                arrCity: '',
-                date: ''
-            });
+            expect(r.$invalid).toBe(true);
+
+            $scope.query.segments[0] = {
+                depCity: 'lax',
+                arrCity: 'can',
+                date: '2016-08-08'
+            };
 
             run();
-            
+
+            expect(r.$invalid).toBe(false);
+
+            $scope.query.segments[0].date = '';
+
+            run();
+
             expect(r.$invalid).toBe(true);
         });
 
