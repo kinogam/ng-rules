@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/kinogam/ng-rules.svg?branch=master)](https://travis-ci.org/kinogam/ng-rules)
 
+[![Coverage Status](https://coveralls.io/repos/github/kinogam/ng-rules/badge.svg?branch=master)](https://coveralls.io/github/kinogam/ng-rules?branch=master)
+
 an easy to test angular validator
 
 # How to install
