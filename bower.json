@@ -19,7 +19,9 @@
     "bower_components",
     "src",
     "gulp",
-    "example"
+    "example",
+    "gulpfile.js",
+    "karma.config.js"
   ],
   "dependencies": {
     "angular": "~1.2.28"
