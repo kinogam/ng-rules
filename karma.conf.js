@@ -40,11 +40,12 @@ module.exports = function(config) {
     ],
 
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      type: 'lcov',
+      dir: 'coverage',
+      subdir: '.'
     },
 
-    reporters: ['progress']
+    reporters: ['progress', 'coverage']
   };
 
   // This is the default preprocessors configuration for a usage with Karma cli
