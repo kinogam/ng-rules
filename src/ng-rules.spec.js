@@ -318,6 +318,21 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(true);
         });
 
+        it('should restrict property equal another property', () => {
+            $scope.pwd = 'kino';
+            $scope.confirmPwd = 'kino';
+
+            rules = {
+                'confirmPwd': 'eq: pwd'
+            };
+
+            r = $rules($scope, rules);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+        });
+
 
 
 

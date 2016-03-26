@@ -1,5 +1,6 @@
 import ruleCollections from './regex-collection';
 import analyzeOriginRules from './analyze-origin-rules';
+import {ParamType} from './enum-type';
 
 angular.module('ngRules', [])
     .factory('$rules', RulesService);
@@ -74,7 +75,19 @@ function RulesService($timeout) {
 
                         for (let i = 0, len = rItems.length; i < len; i++) {
                             let ri = rItems[i],
-                                rItemMatchResult = customRules[ri.methodName].apply(watchExpression[2], [value].concat(ri.params));
+                                layerItem = watchExpression[2],
+                                rItemMatchResult;
+                            
+                            let params = ri.params.map((param) => {
+                                if(param.type === ParamType.PROPERTY){
+                                    return layerItem[param.value];
+                                }
+                                else{
+                                    return param.value;
+                                }
+                            });
+                            
+                            rItemMatchResult = customRules[ri.methodName].apply(layerItem, [value].concat(params));
 
                             if(ri.isReverse){
                                 rItemMatchResult = !rItemMatchResult;

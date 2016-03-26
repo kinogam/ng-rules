@@ -1,16 +1,17 @@
+import {ParamType} from './enum-type';
+
 function analyzeOriginRules(originRules, $scope, originName) {
     let analyzeScope, newRules = {};
 
     if (originName) {
         analyzeScope = $scope.$eval(originName);
-        if(angular.isArray(analyzeScope)){
+        if (angular.isArray(analyzeScope)) {
             analyzeScope = analyzeScope[0];
         }
     }
     else {
         analyzeScope = $scope;
     }
-
 
 
     for (let p in originRules) {
@@ -45,13 +46,25 @@ function updateRule(rules, p, ruleStr) {
             isReverse = false;
 
 
-        if(rsp.length > 0){
+        if (rsp.length > 0) {
             rsp = rsp.map(function (item) {
-                return item.replace(/^\s+|\s+$/g, '').replace(/^['"]|['"]$/g, '');
+                let type;
+
+                if (/^\s*['"]|['"]\s*$/.test(item)) {
+                    type = ParamType.VALUE;
+                }
+                else{
+                    type = ParamType.PROPERTY;
+                }
+
+                return {
+                    type: type,
+                    value: item.replace(/^\s+|\s+$/g, '').replace(/^['"]|['"]$/g, '')
+                };
             });
         }
 
-        if(methodName.indexOf('!') !== -1){
+        if (methodName.indexOf('!') !== -1) {
             isReverse = true;
             methodName = methodName.substr(1);
         }
