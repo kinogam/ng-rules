@@ -25,3 +25,6 @@ install:
   - bower install
 
 script: gulp
+
+after_script:
+  - npm run test-cov
