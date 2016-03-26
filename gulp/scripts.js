@@ -17,15 +17,7 @@ function webpackWrapper(watch, test, callback) {
                 {
                     test: /\.jsx?$/,
                     exclude: /(node_modules|bower_components)/,
-                    loader: 'babel',
-                    query: {
-                        presets: ['es2015']
-                    }
-                },
-                {
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    loader: 'ng-annotate'
+                    loaders: ['ng-annotate', 'babel-loader']
                 }
             ]
         },
