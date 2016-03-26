@@ -287,8 +287,8 @@ describe('ng-rules', () => {
             $scope.arr = 'can';
 
             rules = {
-                'dep': 'eq:can',
-                'arr': 'eq: can '
+                'dep': 'eq:"can"',
+                'arr': 'eq: "can" '
             };
 
             r = $rules($scope, rules);
@@ -308,7 +308,7 @@ describe('ng-rules', () => {
             $scope.dep = 'can';
 
             rules = {
-                'dep': '!eq:can'
+                'dep': `!eq:'can'`
             };
 
             r = $rules($scope, rules);

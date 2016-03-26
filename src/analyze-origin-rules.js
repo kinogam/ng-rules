@@ -41,13 +41,13 @@ function updateRule(rules, p, ruleStr) {
 
     for (let i = 0, len = sp.length; i < len; i++) {
         let rsp = sp[i].split(/\s*:\s*/),
-            methodName = rsp.splice(0, 1)[0].replace(/^\s+|\s+$/, ''),
+            methodName = rsp.splice(0, 1)[0].replace(/^\s+|\s+$/g, ''),
             isReverse = false;
 
 
         if(rsp.length > 0){
             rsp = rsp.map(function (item) {
-                return item.replace(/^\s+|\s+$/, '');
+                return item.replace(/^\s+|\s+$/g, '').replace(/^['"]|['"]$/g, '');
             });
         }
 
