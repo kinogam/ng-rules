@@ -5,8 +5,6 @@ import {ParamType} from './enum-type';
 angular.module('ngRules', [])
     .factory('$rules', RulesService);
 
-
-
 function RulesService($timeout) {
     'ngInject';
 
@@ -20,6 +18,7 @@ function RulesService($timeout) {
             result,
             customRules = angular.copy(ruleCollections);
 
+        //handle dynamic arguments
         if (arguments.length === 2) {
             $scope = arguments[0];
             originRules = arguments[1];
@@ -34,14 +33,14 @@ function RulesService($timeout) {
 
         rules = analyzeOriginRules(originRules, $scope, originName);
 
-
         let watchList = [];
-
-        cancelWatchItems();
         
         watchItems();
 
         return result;
+
+
+
 
 
         function watchItems() {
@@ -52,30 +51,40 @@ function RulesService($timeout) {
 
                 if (angular.isDefined(originName) && angular.isArray(source)) {
                     source.forEach((item, index) => {
-                        watchExpressionList.push([function () {
-                            return item[p];
-                        }, index, item]);
+                        watchExpressionList.push({
+                            watchFunction: () => {
+                                return item[p];
+                            },
+                            index: index,
+                            item: item
+                        });
                     });
                 }
                 else {
-                    watchExpressionList = [[p, undefined, $scope]];
+                    watchExpressionList = [{
+                        watchFunction: () => {
+                            return $scope[p];
+                        },
+                        index: undefined,
+                        item: $scope
+                    }]
                 }
 
 
-                watchExpressionList.forEach((watchExpression) => {
+                watchExpressionList.forEach((watchItem) => {
 
-                    let currentPrefix = angular.isDefined(watchExpression[1]) ? `[${watchExpression[1]}].` : '';
+                    let currentPrefix = angular.isDefined(watchItem.index) ? `[${watchItem.index}].` : '';
 
                     createProp(result, `${currentPrefix}${p}`, {$invalid: false});
 
-                    let watchFn = $scope.$watch(watchExpression[0], function (value) {
+                    let watchFn = $scope.$watch(watchItem.watchFunction, function (value) {
                         if (angular.isUndefined(value)) {
                             return;
                         }
 
                         for (let i = 0, len = rItems.length; i < len; i++) {
                             let ri = rItems[i],
-                                layerItem = watchExpression[2],
+                                layerItem = watchItem.item,
                                 rItemMatchResult;
                             
                             let params = ri.params.map((param) => {
@@ -120,40 +129,6 @@ function RulesService($timeout) {
             watchList = [];
         }
 
-        function checkValid(obj) {
-
-            if (angular.isArray(obj)) {
-                for(var i = 0, len = obj.length; i < len; i++){
-                    var arrayItem = obj[i];
-                    for (let p in arrayItem) {
-                        if (/^$/.test(p)) {
-                            continue;
-                        }
-
-                        if (arrayItem[p].$invalid) {
-                            obj.$invalid = true;
-                            return;
-                        }
-                    }
-                }
-            }
-            else {
-                for (let p in obj) {
-
-                    if (/^$/.test(p)) {
-                        continue;
-                    }
-
-                    if (obj[p].$invalid) {
-                        obj.$invalid = true;
-                        return;
-                    }
-                }
-            }
-
-            obj.$invalid = false;
-        }
-
         function setRule(ruleName, method) {
             customRules[ruleName] = method;
         }
@@ -183,32 +158,65 @@ function RulesService($timeout) {
         }
     }
 
+    return ruleFn;
+}
 
-    function createProp(obj, propStr, propVal) {
-        var sp = propStr.split('.');
-        var node = obj;
+function createProp(obj, propStr, propVal) {
+    var sp = propStr.split('.');
+    var node = obj;
 
-        for (var i = 0, len = sp.length; i < len; i++) {
-            var spName = sp[i];
+    for (var i = 0, len = sp.length; i < len; i++) {
+        var spName = sp[i];
 
-            if(spName.indexOf('[') !== -1){
-                spName = /[^\[\]]+/.exec(spName)[0];
+        if(spName.indexOf('[') !== -1){
+            spName = /[^\[\]]+/.exec(spName)[0];
+        }
+
+        if (angular.isUndefined(node[spName])) {
+            node[spName] = {};
+        }
+
+        if (i === len - 1) {
+            node[spName] = propVal;
+        }
+        else {
+            node = node[spName];
+        }
+    }
+}
+
+function checkValid(obj) {
+
+    if (angular.isArray(obj)) {
+        for(var i = 0, len = obj.length; i < len; i++){
+            var arrayItem = obj[i];
+            for (let p in arrayItem) {
+                if (/^$/.test(p)) {
+                    continue;
+                }
+
+                if (arrayItem[p].$invalid) {
+                    obj.$invalid = true;
+                    return;
+                }
+            }
+        }
+    }
+    else {
+        for (let p in obj) {
+
+            if (/^$/.test(p)) {
+                continue;
             }
 
-            if (angular.isUndefined(node[spName])) {
-                node[spName] = {};
-            }
-
-            if (i === len - 1) {
-                node[spName] = propVal;
-            }
-            else {
-                node = node[spName];
+            if (obj[p].$invalid) {
+                obj.$invalid = true;
+                return;
             }
         }
     }
 
-    return ruleFn;
+    obj.$invalid = false;
 }
 
 export default RulesService;

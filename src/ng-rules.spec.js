@@ -333,6 +333,29 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(false);
         });
 
+/*
+        it('can equal to an object', () => {
+            $scope.obj1 = {a:1};
+            $scope.obj2 = {a:1};
+
+            rules = {
+                'obj2': 'eq: obj1'
+            };
+
+            r = $rules($scope, rules);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+
+            $scope.obj2.a = 2;
+
+            run();
+
+            expect(r.$invalid).toBe(true);
+        });
+*/
+
 
 
 

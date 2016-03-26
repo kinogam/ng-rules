@@ -14,7 +14,7 @@ export default {
         return rps_value.length <= len;
     },
     'eq': (orginVal, compareVal) => {
-        return orginVal === compareVal;
+        return  angular.equals(orginVal, compareVal);
     }
 };
             
