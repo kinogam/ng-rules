@@ -38,6 +38,7 @@
     "jasmine-core": "^2.4.1",
     "karma": "~0.13.10",
     "karma-coverage": "~0.5.2",
+    "karma-coveralls": "^1.1.2",
     "karma-jasmine": "^0.3.8",
     "karma-phantomjs-launcher": "~1.0.0",
     "lodash": "^3.10.1",
