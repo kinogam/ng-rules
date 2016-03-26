@@ -210,3 +210,5 @@ function RulesService($timeout) {
 
     return ruleFn;
 }
+
+export default RulesService;
