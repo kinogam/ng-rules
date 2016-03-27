@@ -50,7 +50,7 @@ function updateRule(rules, p, ruleStr) {
             rsp = rsp.map(function (item) {
                 let type;
 
-                if (/^\s*['"]|['"]\s*$/.test(item)) {
+                if (/^\s*['"]|['"]\s*$/.test(item) || /^-?\d+(?:\.\d+)?$/.test(item)) {
                     type = ParamType.VALUE;
                 }
                 else{
