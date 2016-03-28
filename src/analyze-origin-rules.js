@@ -75,6 +75,8 @@ function updateRule(rules, p, ruleStr) {
             isReverse: isReverse
         });
     }
+
+    rItem.fieldName = p;
 }
 
 export default analyzeOriginRules;

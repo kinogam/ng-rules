@@ -1,6 +1,7 @@
 import ruleCollections from './regex-collection';
 import analyzeOriginRules from './analyze-origin-rules';
-import {ParamType} from './enum-type';
+//import {ParamType} from './enum-type';
+import {watchHandle, watchContent} from './watch-handle';
 
 angular.module('ngRules', [])
     .factory('$rules', RulesService);
@@ -8,7 +9,7 @@ angular.module('ngRules', [])
 function RulesService($timeout) {
     'ngInject';
 
-    function ruleFn() {
+    return function ruleFn() {
         let $scope,
             originName,
             rules,
@@ -22,11 +23,13 @@ function RulesService($timeout) {
         if (arguments.length === 2) {
             $scope = arguments[0];
             originRules = arguments[1];
+            source = $scope;
         }
         else {
             $scope = arguments[0];
             originName = arguments[1];
             originRules = arguments[2];
+            source = $scope.$eval(originName)
         }
 
         result = getInitResult();
@@ -34,13 +37,10 @@ function RulesService($timeout) {
         rules = analyzeOriginRules(originRules, $scope, originName);
 
         let watchList = [];
-        
+
         watchItems();
 
         return result;
-
-
-
 
 
         function watchItems() {
@@ -48,79 +48,32 @@ function RulesService($timeout) {
                 let watchExpressionList = [],
                     rItems = rules[p];
 
-
                 if (angular.isDefined(originName) && angular.isArray(source)) {
                     source.forEach((item, index) => {
+                        let propPath =  `${originName}[${index}].${p}`;
                         watchExpressionList.push({
-                            watchFunction: () => {
-                                return item[p];
-                            },
+                            watchFunction: watchHandle(rItems, propPath),
                             index: index,
                             item: item
                         });
                     });
                 }
                 else {
+                    let propPath = angular.isDefined(originName) ? `${originName}.${p}` : p;
                     watchExpressionList = [{
-                        watchFunction: () => {
-                            return $scope[p];
-                        },
+                        watchFunction: watchHandle(rItems, propPath),
                         index: undefined,
-                        item: $scope
+                        item: source
                     }]
                 }
 
-
-                watchExpressionList.forEach((watchItem) => {
-
-                    let currentPrefix = angular.isDefined(watchItem.index) ? `[${watchItem.index}].` : '';
-
-                    createProp(result, `${currentPrefix}${p}`, {$invalid: false});
-
-                    let watchFn = $scope.$watch(watchItem.watchFunction, function (value) {
-                        if (angular.isUndefined(value)) {
-                            return;
-                        }
-
-                        for (let i = 0, len = rItems.length; i < len; i++) {
-                            let ri = rItems[i],
-                                layerItem = watchItem.item,
-                                rItemMatchResult;
-                            
-                            let params = ri.params.map((param) => {
-                                if(param.type === ParamType.PROPERTY){
-                                    return layerItem[param.value];
-                                }
-                                else{
-                                    return param.value;
-                                }
-                            });
-                            
-                            rItemMatchResult = customRules[ri.methodName].apply(layerItem, [value].concat(params));
-
-                            if(ri.isReverse){
-                                rItemMatchResult = !rItemMatchResult;
-                            }
-
-                            createProp(result, `${currentPrefix}${p}.$invalid`, !rItemMatchResult);
-
-                            if (!rItemMatchResult) {
-                                break;
-                            }
-                        }
-
-                        timeChecker && $timeout.cancel(timeChecker);
-
-                        timeChecker = $timeout(() => {
-                            checkValid(result);
-                        }, 60);
-                    });
-
+                watchExpressionList.forEach((item) => {
+                    let watchFn = $scope.$watch(item.watchFunction, watchContent(rItems, item, p, customRules, result, timeChecker, $timeout));
                     watchList.push(watchFn);
                 });
             }
         }
-        
+
         function cancelWatchItems() {
             watchList.forEach((clear) => {
                 clear();
@@ -136,10 +89,10 @@ function RulesService($timeout) {
         function getInitResult() {
             let result;
 
-            if (angular.isDefined(originName) && angular.isArray(source = $scope.$eval(originName))) {
+            if (angular.isDefined(originName) && angular.isArray(source)) {
                 result = [];
                 $scope.$watchCollection(originName, (val) => {
-                    if(angular.isDefined(val)){
+                    if (angular.isDefined(val)) {
                         cancelWatchItems();
                         watchItems();
                     }
@@ -157,66 +110,8 @@ function RulesService($timeout) {
             return result;
         }
     }
-
-    return ruleFn;
 }
 
-function createProp(obj, propStr, propVal) {
-    var sp = propStr.split('.');
-    var node = obj;
 
-    for (var i = 0, len = sp.length; i < len; i++) {
-        var spName = sp[i];
-
-        if(spName.indexOf('[') !== -1){
-            spName = /[^\[\]]+/.exec(spName)[0];
-        }
-
-        if (angular.isUndefined(node[spName])) {
-            node[spName] = {};
-        }
-
-        if (i === len - 1) {
-            node[spName] = propVal;
-        }
-        else {
-            node = node[spName];
-        }
-    }
-}
-
-function checkValid(obj) {
-
-    if (angular.isArray(obj)) {
-        for(var i = 0, len = obj.length; i < len; i++){
-            var arrayItem = obj[i];
-            for (let p in arrayItem) {
-                if (/^$/.test(p)) {
-                    continue;
-                }
-
-                if (arrayItem[p].$invalid) {
-                    obj.$invalid = true;
-                    return;
-                }
-            }
-        }
-    }
-    else {
-        for (let p in obj) {
-
-            if (/^$/.test(p)) {
-                continue;
-            }
-
-            if (obj[p].$invalid) {
-                obj.$invalid = true;
-                return;
-            }
-        }
-    }
-
-    obj.$invalid = false;
-}
 
 export default RulesService;

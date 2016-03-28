@@ -8,22 +8,36 @@
     <script>
         angular.module('kino', ['ngRules'])
                 .controller('MyController', function($scope, $rules){
-                    $scope. num = 123;
+                    $scope.num = {
+                        a: 123
+                    };
 
-                    var rules = {
+                    $scope.b = {s:1};
+
+                    $scope.c = 123;
+
+                    $scope.d = 'kino';
+
+                    $scope.$watch(function ($scope) {
+                        return JSON.stringify($scope.num) + JSON.stringify($scope.b) + JSON.stringify($scope.c) + JSON.stringify($scope.d);
+                    }, function (value, b, c) {
+                        console.log(c)
+                    });
+
+             /*       var rules = {
                       "num": "number | maxLen: 5"
                     };
 
                     var r = $rules($scope, rules);
 
-                    $scope.r = r;
+                    $scope.r = r;*/
                 });
 
 
     </script>
 </head>
 <body ng-controller="MyController" ng-app="kino">
-<input type="text" ng-model="num" />
+<input type="text" ng-model="num.a" />
 <br/>
 {{r.$invalid}}
 </body>
