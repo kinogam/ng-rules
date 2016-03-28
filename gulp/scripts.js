@@ -12,7 +12,7 @@ function webpackWrapper(watch, test, callback) {
     var webpackOptions = {
         watch: watch,
         module: {
-           // preLoaders: [{test: /\.js$/, exclude: /node_modules/, loader: 'eslint-loader'}],
+            preLoaders: [{test: /\.js$/, exclude: /node_modules/, loader: 'eslint-loader'}],
             loaders: [
                 {
                     test: /\.jsx?$/,
