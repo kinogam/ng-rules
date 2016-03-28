@@ -95,7 +95,7 @@ function hasAnotherField(rItemList) {
 }
 
 function getWatchFields(rItemList) {
-    let fileds = [], result = [];
+    let fields = [rItemList.fieldName], result = [];
 
     for (let i = 0, len = rItemList.length; i < len; i++) {
         let rItem = rItemList[i];
@@ -106,10 +106,10 @@ function getWatchFields(rItemList) {
             return item.value;
         });
 
-        fileds = fileds.concat(values);
+        fields = fields.concat(values);
     }
 
-    fileds.forEach((item) => {
+    fields.forEach((item) => {
         if (result.indexOf(item) === -1) {
             result.push(item);
         }
