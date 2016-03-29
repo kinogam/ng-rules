@@ -333,7 +333,6 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(false);
         });
 
-/*
         it('can equal to an object', () => {
             $scope.obj1 = {a:1};
             $scope.obj2 = {a:1};
@@ -354,7 +353,6 @@ describe('ng-rules', () => {
 
             expect(r.$invalid).toBe(true);
         });
-*/
 
 
 

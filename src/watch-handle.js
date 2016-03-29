@@ -1,4 +1,6 @@
+import './polyfill';
 import {ParamType} from './enum-type';
+
 
 export function watchHandle(rItemList, prop) {
     //if it has specify another field as parameter, then we need check combo
@@ -85,7 +87,7 @@ function hasAnotherField(rItemList) {
     for (let i = 0, len = rItemList.length; i < len; i++) {
         let rItem = rItemList[i];
 
-        if (angular.isDefined(rItem.params) && rItem.params.findIndex && rItem.params.findIndex(function (item) {
+        if (angular.isDefined(rItem.params) && rItem.params.findIndex(function (item) {
                 return item.type === ParamType.PROPERTY;
             }) !== -1) {
             return true;
