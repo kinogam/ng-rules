@@ -22,16 +22,46 @@ angular.module('yourApp', ['ngRules']);
 
 Inject in Controller
 ```javascript
-        angular.module('kino', ['ngRules'])
-                .controller('MyController', function($scope, $rules){
-                    $scope. num = 123;
-                    
-                    var rules = {
-                      "num": "number | maxLen: 5"
-                    };
-                    
-                    var r = $rules($scope, rules);
+angular.module('kino', ['ngRules'])
+        .controller('MyController', function($scope, $rules){
+            $scope.num = 123;
+            
+            var rules = {
+              "num": "number | maxLen: 5"
+            };
+            
+            var r = $rules($scope, rules);
 
-                    $scope.r = r;
-                });
+            $scope.r = r;
+        });
 ``` 
+
+
+
+Rules
+```javascript
+    rules = {
+            '*': 'required',
+            p1: 'number| maxLen: 5',
+            p2: 'email',
+            p3: 'eq: p1',
+            p4: '!eq: p2'
+        };
+```
+
+Use custom rule
+```javascript
+    r = $rules($scope, rules);       
+    r.$setRule('customRule', (value) => {
+        return /^\d[a-z]+\d$/.test(value);
+    });
+```
+
+Validate
+```javascript
+    //you can use r.$invalid to check the validation
+    expect(r.$invalidate).toBe(true);
+    
+    //or check the field's validate like this
+    expect(r.p1.$invalid).toBe(true);
+```
