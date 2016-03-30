@@ -15,6 +15,9 @@ export default {
     },
     'eq': (orginVal, compareVal) => {
         return  angular.equals(orginVal, compareVal);
+    },
+    'gt': (val1, val2) => {
+        return val1 > val2;
     }
 };
             

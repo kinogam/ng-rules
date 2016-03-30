@@ -354,7 +354,28 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(true);
         });
 
+        it('can restrict a field greater than another field', () => {
+           $scope.origin = {
+               a: 231,
+               b: 111
+           };
 
+            rules = {
+                'b': 'gt: a'
+            };
+
+            r = $rules($scope, 'origin', rules);
+
+            run();
+
+            expect(r.$invalid).toBe(true);
+
+            $scope.origin.b = 456;
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+        });
 
 
         /*

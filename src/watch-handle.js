@@ -8,7 +8,7 @@ export function watchHandle(rItemList, prop) {
         let fields = getWatchFields(rItemList);
 
         let funcStr = fields.map((item) => {
-            return `(angular.isObject($scope.${item})? JSON.stringify($scope.${item}) : $scope.${item})`
+            return `(angular.isObject($scope${prop}.${item})? JSON.stringify($scope${prop}.${item}) : $scope${prop}.${item})`
         }).join('+');
 
         return new Function('$scope', `
@@ -17,7 +17,7 @@ export function watchHandle(rItemList, prop) {
     }
     else {
         return new Function('$scope', `
-            return $scope.${prop};
+            return $scope${prop}.${rItemList.fieldName};
         `);
     }
 }

@@ -50,7 +50,7 @@ function RulesService($timeout) {
 
                 if (angular.isDefined(originName) && angular.isArray(source)) {
                     source.forEach((item, index) => {
-                        let propPath =  `${originName}[${index}].${p}`;
+                        let propPath =  `.${originName}[${index}]`;
                         watchExpressionList.push({
                             watchFunction: watchHandle(rItems, propPath),
                             index: index,
@@ -59,7 +59,7 @@ function RulesService($timeout) {
                     });
                 }
                 else {
-                    let propPath = angular.isDefined(originName) ? `${originName}.${p}` : p;
+                    let propPath = angular.isDefined(originName) ? `.${originName}` : '';
                     watchExpressionList = [{
                         watchFunction: watchHandle(rItems, propPath),
                         index: undefined,
