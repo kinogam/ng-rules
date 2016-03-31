@@ -538,7 +538,7 @@ describe('ng-rules', () => {
 
         describe('pseudo', () => {
 
-            it('first child', () => {
+            it('can specify first child to apply the rule', () => {
                 $scope.list = [
                     {
                         p: '123'
@@ -560,6 +560,50 @@ describe('ng-rules', () => {
                 expect(r.$invalid).toBe(false);
 
             });
+
+            it('can ignore specify group items', () => {
+                $scope.list = [
+                    {
+                        p: 'abcdefg'
+                    },
+                    {
+                        p: 'cdf'
+                    }
+                ];
+
+                rules = {
+                    'p:not(:first-child)': 'maxLen: 5'
+                };
+
+                r = $rules($scope, 'list', rules);
+
+                run();
+
+                expect(r.$invalid).toBe(false);
+            });
+
+            it('can specify index of group item apply the rule', () => {
+                $scope.list = [
+                    {
+                        p: 'abcs'
+                    },
+                    {
+                        p: 'cdffffffffffff'
+                    }
+                ];
+
+                rules = {
+                    'p:nth-child(1)': 'maxLen: 5'
+                };
+
+                r = $rules($scope, 'list', rules);
+
+                run();
+
+                expect(r.$invalid).toBe(false);
+            });
+
+
 
         });
 
@@ -592,9 +636,9 @@ describe('pseudo-filter', () => {
     it('nth-child', () => {
         var fn = pseudoFilter(':nth-child(3)');
 
-        expect(fn(3)).toBe(true);
+        expect(fn(2)).toBe(true);
 
-        expect(fn(4)).toBe(false);
+        expect(fn(3)).toBe(false);
     });
 });
 
