@@ -505,8 +505,92 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(true);
         });
 
+
+
+        /*it('can compare to previous items', () => {
+            $scope.query = {
+                segments: [
+                    {
+                        depCity: 'can',
+                        arrCity: 'lax',
+                        date: '2016-08-06'
+                    },
+                    {
+                        depCity: 'lax',
+                        arrCity: 'can',
+                        date: '2016-08-08'
+                    }
+                ]
+            };
+
+            rules = {
+                'date:not(:first-child)': 'gt:@group[@index-1].date'
+            };
+
+            r = $rules($scope, 'query.segments', rules);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
+        });*/
+
+/*        describe('pseudo', () => {
+
+            it('first child', () => {
+                $scope.list = [
+                    {
+                        p: 'abc'
+                    },
+                    {
+                        p: 'cdf'
+                    }
+                ];
+
+                rules = {
+                    'p': 'maxLen: 5',
+                    'p:first-child': `eq: 'abc'`
+                };
+
+                r = $rules($scope, 'list', rules);
+
+                run();
+
+                expect(r.$invalid).toBe(false);
+            });
+
+        });*/
+
     });
 
 
+
+});
+
+
+
+import pseudoFilter from  './pseudo-filter';
+
+describe('pseudo-filter', () => {
+    it('first child', () => {
+        var fn = pseudoFilter(':first-child');
+
+        expect(fn(0)).toBe(true);
+
+        expect(fn(1)).toBe(false);
+    });
+
+    it('reverse', () => {
+        var fn = pseudoFilter(':not(:first-child)');
+        expect(fn(1)).toBe(true);
+    });
+
+
+    it('nth-child', () => {
+        var fn = pseudoFilter(':nth-child(3)');
+
+        expect(fn(3)).toBe(true);
+
+        expect(fn(4)).toBe(false);
+    });
 });
 

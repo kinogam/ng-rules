@@ -17,12 +17,13 @@ export function watchHandle(rItemList, prop) {
     }
     else {
         return new Function('$scope', `
-            return $scope${prop}.${rItemList.fieldName};
+            return $scope${prop}.${rItemList.field};
         `);
     }
 }
 
 export function watchContent(rItems, watchItem, p, customRules, result, timeChecker, $timeout) {
+    
     let path = angular.isDefined(watchItem.index) ? `[${watchItem.index}].${p}` : `.${p}`;
 
     createProp(result, path.replace(/^\./, ''), {$invalid: false});
@@ -97,7 +98,7 @@ function hasAnotherField(rItemList) {
 }
 
 function getWatchFields(rItemList) {
-    let fields = [rItemList.fieldName], result = [];
+    let fields = [rItemList.field], result = [];
 
     for (let i = 0, len = rItemList.length; i < len; i++) {
         let rItem = rItemList[i];

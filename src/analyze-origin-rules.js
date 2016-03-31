@@ -1,4 +1,5 @@
 import {ParamType} from './enum-type';
+import pseudoFilter from './pseudo-filter';
 
 function analyzeOriginRules(originRules, $scope, originName) {
     let analyzeScope, newRules = {};
@@ -32,13 +33,15 @@ function analyzeOriginRules(originRules, $scope, originName) {
 }
 
 function updateRule(rules, p, ruleStr) {
-    let sp = ruleStr.split(/\s*\|\s*/);
+    let sp = ruleStr.split(/\s*\|\s*/),
+        selectorSplit = p.split(/\s*:\s*/),
+        field = selectorSplit[0];
 
-    if (angular.isUndefined(rules[p])) {
-        rules[p] = [];
+    if (angular.isUndefined(rules[field])) {
+        rules[field] = [];
     }
 
-    let rItem = rules[p];
+    let rItem = rules[field];
 
     for (let i = 0, len = sp.length; i < len; i++) {
         let rsp = sp[i].split(/\s*:\s*/),
@@ -76,7 +79,10 @@ function updateRule(rules, p, ruleStr) {
         });
     }
 
-    rItem.fieldName = p;
+    rItem.field = field;
+
+    //rItem.pseudoFilter = angular.isDefined(selectorSplit[1])? pseudoFilter(selectorSplit[1]): () => {return true};
 }
+
 
 export default analyzeOriginRules;
