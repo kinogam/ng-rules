@@ -37,6 +37,8 @@ function updateRule(rules, p, ruleStr) {
         selectorSplit = p.split(/\s*:\s*/),
         field = selectorSplit[0];
 
+    let itemFilter = angular.isDefined(selectorSplit[1])? pseudoFilter(selectorSplit[1]): () => {return true};
+
     if (angular.isUndefined(rules[field])) {
         rules[field] = [];
     }
@@ -75,7 +77,8 @@ function updateRule(rules, p, ruleStr) {
         rItem.push({
             methodName: methodName,
             params: rsp,
-            isReverse: isReverse
+            isReverse: isReverse,
+            filter: itemFilter
         });
     }
 

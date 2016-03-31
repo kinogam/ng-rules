@@ -35,6 +35,10 @@ export function watchContent(rItems, watchItem, p, customRules, result, timeChec
     for (let i = 0, len = rItems.length; i < len; i++) {
         let ri = rItems[i];
 
+        if(!ri.filter(watchItem.index)){
+            continue;
+        }
+
         let params = ri.params.map((param) => {
             if (param.type === ParamType.PROPERTY) {
                 return `layerItem.${param.value}`;

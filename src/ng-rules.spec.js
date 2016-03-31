@@ -402,6 +402,7 @@ describe('ng-rules', () => {
 
     describe('group validate', () => {
 
+
         it('should validate group', () => {
             $scope.query = {
                 segments: [
@@ -507,6 +508,7 @@ describe('ng-rules', () => {
 
 
 
+
         /*it('can compare to previous items', () => {
             $scope.query = {
                 segments: [
@@ -534,12 +536,12 @@ describe('ng-rules', () => {
             expect(r.$invalid).toBe(false);
         });*/
 
-/*        describe('pseudo', () => {
+        describe('pseudo', () => {
 
             it('first child', () => {
                 $scope.list = [
                     {
-                        p: 'abc'
+                        p: '123'
                     },
                     {
                         p: 'cdf'
@@ -548,7 +550,7 @@ describe('ng-rules', () => {
 
                 rules = {
                     'p': 'maxLen: 5',
-                    'p:first-child': `eq: 'abc'`
+                    'p:first-child': 'number'
                 };
 
                 r = $rules($scope, 'list', rules);
@@ -556,15 +558,17 @@ describe('ng-rules', () => {
                 run();
 
                 expect(r.$invalid).toBe(false);
+
             });
 
-        });*/
+        });
 
     });
 
 
 
 });
+
 
 
 
@@ -593,4 +597,5 @@ describe('pseudo-filter', () => {
         expect(fn(4)).toBe(false);
     });
 });
+
 
