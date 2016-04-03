@@ -509,7 +509,7 @@ describe('ng-rules', () => {
 
 
 
-        /*it('can compare to previous items', () => {
+        it('can compare to previous items', () => {
             $scope.query = {
                 segments: [
                     {
@@ -526,7 +526,7 @@ describe('ng-rules', () => {
             };
 
             rules = {
-                'date:not(:first-child)': 'gt:@group[@index-1].date'
+                'date:not(:first-child)': 'gt:@group[index-1].date'
             };
 
             r = $rules($scope, 'query.segments', rules);
@@ -534,7 +534,11 @@ describe('ng-rules', () => {
             run();
 
             expect(r.$invalid).toBe(false);
-        });*/
+
+            $scope.query.segments[1].date = '2016-08-04';
+            run();
+            expect(r.$invalid).toBe(true);
+        });
 
         describe('pseudo', () => {
 

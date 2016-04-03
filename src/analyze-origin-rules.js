@@ -37,7 +37,7 @@ function updateRule(rules, p, ruleStr) {
         selectorSplit = p.split(/\s*:\s*/),
         field = selectorSplit[0];
 
-    let itemFilter = angular.isDefined(selectorSplit[1])? pseudoFilter(selectorSplit[1]): () => {return true};
+    let itemFilter = angular.isDefined(selectorSplit[1])? pseudoFilter(selectorSplit.slice(1).join('')): () => {return true};
 
     if (angular.isUndefined(rules[field])) {
         rules[field] = [];
