@@ -92,6 +92,9 @@ function RulesService($timeout) {
                 $scope.$watchCollection(originName, (val) => {
                     if (angular.isDefined(val)) {
                         cancelWatchItems();
+
+                        result.splice(0);
+                        
                         watchItems();
                     }
                 })

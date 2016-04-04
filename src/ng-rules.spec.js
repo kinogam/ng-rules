@@ -399,9 +399,7 @@ describe('ng-rules', () => {
 
     });
 
-
     describe('group validate', () => {
-
 
         it('should validate group', () => {
             $scope.query = {
@@ -466,6 +464,12 @@ describe('ng-rules', () => {
             run();
 
             expect(r.$invalid).toBe(true);
+
+            $scope.query.segments.splice(2, 1);
+
+            run();
+
+            expect(r.$invalid).toBe(false);
         });
 
         it('should watch the value change', () => {
@@ -505,9 +509,6 @@ describe('ng-rules', () => {
 
             expect(r.$invalid).toBe(true);
         });
-
-
-
 
         it('can compare to previous items', () => {
             $scope.query = {
@@ -612,8 +613,6 @@ describe('ng-rules', () => {
         });
 
     });
-
-
 
 });
 
