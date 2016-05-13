@@ -45,7 +45,12 @@ Rules
             p1: 'number| maxLen: 5',
             p2: 'email',
             p3: 'eq: p1',
-            p4: '!eq: p2'
+            p4: '!eq: p2',
+            p5: 'eq: \'can\'',
+            p6: 'gt:p1',
+            'date:not(:first-child)': 'gt:@group[index-1].date',
+            'px:first-child': 'number',
+            'py:not(:first-child)': 'maxLen: 5'
         };
 ```
 
