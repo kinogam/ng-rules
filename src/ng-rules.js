@@ -1,23 +1,109 @@
 import ruleCollections from './regex-collection';
 import analyzeOriginRules from './analyze-origin-rules';
-//import {ParamType} from './enum-type';
 import {watchHandle, watchContent} from './watch-handle';
 
-angular.module('ngRules', [])
-    .factory('$rules', RulesService);
+class RuleHelper{
+    constructor($timeout, $scope, originName, originRules, source){
+
+        this.customRules = angular.copy(ruleCollections);
+        this.timeChecker = null;        
+        this.$timeout = $timeout;
+        this.$scope = $scope;
+        this.originName = originName;
+        this.source = source;
+
+        this.watchList = [];
+        
+
+        this.result = this._getInitResult();
+
+        this.rules = analyzeOriginRules(originRules, $scope, originName);
+
+        this._watchItems();
+    }
+
+    getRuleObj(){
+        return this.result;
+    }
+
+    _watchItems(){
+        let vm = this;
+
+        for (let p in vm.rules) {
+            let watchExpressionList = [],
+                rItems = vm.rules[p];
+
+            if (angular.isDefined(vm.originName) && angular.isArray(vm.source)) {
+                vm.source.forEach((item, index) => {
+                    watchExpressionList.push({
+                        watchFunction: watchHandle(vm.$scope, rItems, vm.originName, index),
+                        index: index,
+                        item: item
+                    });
+                });
+            }
+            else {
+                watchExpressionList = [{
+                    watchFunction: watchHandle(vm.$scope, rItems, vm.originName),
+                    index: undefined,
+                    item: vm.source
+                }]
+            }
+
+            watchExpressionList.forEach((item) => {
+                let watchFn = vm.$scope.$watch(item.watchFunction, watchContent(rItems, item, p, vm.customRules, vm.result, vm.timeChecker, vm.$timeout, vm.$scope, vm.originName));
+                vm.watchList.push(watchFn);
+            });
+        }
+    }
+
+    _cancelWatchItems(){
+        this.watchList.forEach((clear) => {
+            clear();
+        });
+
+        this.watchList = [];
+    }
+    
+    _getInitResult(){
+        let result,
+            vm = this;
+
+        if (angular.isDefined(vm.originName) && angular.isArray(vm.source)) {
+            result = [];
+            vm.$scope.$watchCollection(vm.originName, (val) => {
+                if (angular.isDefined(val)) {
+                    vm._cancelWatchItems();
+
+                    result.splice(0);
+
+                    vm._watchItems();
+                }
+            })
+        }
+        else {
+            result = {};
+        }
+
+        angular.extend(result, {
+            $invalid: false,
+            $setRule: (ruleName, method) => {
+                vm.customRules[ruleName] = method;
+            }
+        });
+
+        return result;
+    }
+}
 
 function RulesService($timeout) {
     'ngInject';
 
-    return function ruleFn() {
+    return function (){
         let $scope,
             originName,
-            rules,
             originRules,
-            timeChecker,
-            source,
-            result,
-            customRules = angular.copy(ruleCollections);
+            source;
 
         //handle dynamic arguments
         if (arguments.length === 2) {
@@ -32,87 +118,11 @@ function RulesService($timeout) {
             source = $scope.$eval(originName)
         }
 
-        result = getInitResult();
+        let ruleHelper = new RuleHelper($timeout, $scope, originName, originRules, source);
 
-        rules = analyzeOriginRules(originRules, $scope, originName);
-
-        let watchList = [];
-
-        watchItems();
-
-        return result;
-
-
-        function watchItems() {
-            for (let p in rules) {
-                let watchExpressionList = [],
-                    rItems = rules[p];
-
-                if (angular.isDefined(originName) && angular.isArray(source)) {
-                    source.forEach((item, index) => {
-                        watchExpressionList.push({
-                            watchFunction: watchHandle($scope, rItems, originName, index),
-                            index: index,
-                            item: item
-                        });
-                    });
-                }
-                else {
-                    watchExpressionList = [{
-                        watchFunction: watchHandle($scope, rItems, originName),
-                        index: undefined,
-                        item: source
-                    }]
-                }
-
-                watchExpressionList.forEach((item) => {
-                    let watchFn = $scope.$watch(item.watchFunction, watchContent(rItems, item, p, customRules, result, timeChecker, $timeout, $scope, originName));
-                    watchList.push(watchFn);
-                });
-            }
-        }
-
-        function cancelWatchItems() {
-            watchList.forEach((clear) => {
-                clear();
-            });
-
-            watchList = [];
-        }
-
-        function setRule(ruleName, method) {
-            customRules[ruleName] = method;
-        }
-
-        function getInitResult() {
-            let result;
-
-            if (angular.isDefined(originName) && angular.isArray(source)) {
-                result = [];
-                $scope.$watchCollection(originName, (val) => {
-                    if (angular.isDefined(val)) {
-                        cancelWatchItems();
-
-                        result.splice(0);
-                        
-                        watchItems();
-                    }
-                })
-            }
-            else {
-                result = {};
-            }
-
-            angular.extend(result, {
-                $invalid: false,
-                $setRule: setRule
-            });
-
-            return result;
-        }
-    }
+        return ruleHelper.getRuleObj();
+    };
 }
 
-
-
-export default RulesService;
+export default angular.module('ngRules', [])
+    .factory('$rules', RulesService);
