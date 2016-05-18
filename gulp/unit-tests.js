@@ -7,7 +7,7 @@ var conf = require('./conf');
 var karma = require('karma');
 
 var pathSrcJs = [
-  path.join(conf.paths.tmp, '/ng-rules.js')
+  path.join(conf.paths.src, '/**/*.js')
 ];
 
 function runTests (singleRun, done) {
